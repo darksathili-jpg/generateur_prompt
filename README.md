@@ -46,7 +46,7 @@ Ou accéder en ligne : **[lien à compléter]**
  
 ---
  
-## 📋 Prérequis
+## Prérequis
  
 | Élément | Détail |
 |---------|--------|
