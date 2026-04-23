@@ -1,0 +1,2170 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NSI Prompt Forge v5 — Générateur de prompts pédagogiques</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/oceanicnext.min.css" id="hljs-dark">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" id="hljs-light" disabled>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/xml.min.js"></script>
+<style>
+/* ══════════════════════════════════════════════════════
+   NSI PROMPT FORGE v5 — DarkSATHI Li
+   Lycée Antoine Watteau — Valenciennes
+   ══════════════════════════════════════════════════════ */
+:root {
+  --bg:         #080a14;
+  --bg-card:    #0e1020;
+  --bg-section: #111325cc;
+  --bg-in:      #171a2c;
+  --bg-hov:     #1d2035;
+  --bdr:        #232546;
+  --bdr-acc:    #313560;
+  --violet:     #6c63ff;
+  --vlt:        #8b83ff;
+  --vdim:       rgba(108,99,255,.11);
+  --green:      #00d4aa;
+  --gdim:       rgba(0,212,170,.1);
+  --orange:     #ff8c42;
+  --odim:       rgba(255,140,66,.1);
+  --ruby:       #ff4d6d;
+  --rdim:       rgba(255,77,109,.1);
+  --gold:       #ffd166;
+  --gdold:      rgba(255,209,102,.1);
+  --cyan:       #38bdf8;
+  --cdim:       rgba(56,189,248,.1);
+  --t1:         #eceef8;
+  --t2:         #9fa8da;
+  --t3:         #4e5278;
+  --code:       #06080f;
+  --r:          8px;
+  --rl:         12px;
+  --tr:         .2s cubic-bezier(.4,0,.2,1);
+  --sidebar-w:  460px;
+}
+
+[data-theme="light"] {
+  --bg:#f4f5fb;--bg-card:#ffffff;--bg-section:rgba(255,255,255,.88);
+  --bg-in:#f0f1f8;--bg-hov:#e8eaf6;--bdr:#dde0f0;--bdr-acc:#c5c8e8;
+  --violet:#5046e5;--vlt:#6c63ff;--vdim:rgba(80,70,229,.08);
+  --green:#00a885;--gdim:rgba(0,168,133,.08);
+  --orange:#e07030;--odim:rgba(224,112,48,.08);
+  --ruby:#e0364d;--rdim:rgba(224,54,77,.08);
+  --gold:#c49a00;--gdold:rgba(196,154,0,.08);
+  --cyan:#0284c7;--cdim:rgba(2,132,199,.08);
+  --t1:#1a1c2e;--t2:#3d4068;--t3:#8890bb;--code:#f8f9ff;
+}
+
+[data-theme="projector"] {
+  --bg:#ffffff;--bg-card:#ffffff;--bg-section:#f5f5f5;
+  --bg-in:#eeeeee;--bg-hov:#e0e0e0;--bdr:#cccccc;--bdr-acc:#999999;
+  --violet:#3d0099;--vlt:#5500cc;--vdim:rgba(61,0,153,.07);
+  --green:#006644;--gdim:rgba(0,102,68,.07);
+  --orange:#b35000;--odim:rgba(179,80,0,.07);
+  --ruby:#cc0022;--rdim:rgba(204,0,34,.07);
+  --gold:#8a6000;--gdold:rgba(138,96,0,.07);
+  --cyan:#0369a1;--cdim:rgba(3,105,161,.07);
+  --t1:#000000;--t2:#222222;--t3:#666666;--code:#f0f0f0;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:15px}
+body{
+  background:var(--bg);color:var(--t1);
+  font-family:'Source Serif 4',Georgia,serif;
+  line-height:1.75;min-height:100vh;overflow-x:hidden;
+}
+
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 85% 45% at 12% 4%,rgba(108,99,255,.1) 0%,transparent 55%),
+    radial-gradient(ellipse 65% 35% at 90% 88%,rgba(0,212,170,.07) 0%,transparent 50%),
+    radial-gradient(ellipse 45% 22% at 55% 48%,rgba(255,140,66,.04) 0%,transparent 45%);
+  animation:amb 20s ease-in-out infinite alternate;
+}
+[data-theme="projector"] body::before{display:none}
+@keyframes amb{0%{opacity:1}50%{opacity:.65}100%{opacity:1}}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  position:sticky;top:0;z-index:200;
+  display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;
+  padding:.45rem 1.2rem;
+  background:rgba(8,10,20,.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--bdr);
+}
+[data-theme="light"] .topbar{background:rgba(244,245,251,.9)}
+[data-theme="projector"] .topbar{background:#fff}
+.topbar-brand{
+  font-family:'Rubik Dirt',cursive;font-size:.9rem;
+  background:linear-gradient(128deg,#fff 0%,var(--vlt) 50%,var(--green) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-right:.4rem;white-space:nowrap;
+}
+.topbar-brand .vchip{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;
+  background:linear-gradient(135deg,var(--violet),var(--green));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  vertical-align:super;margin-left:.15rem;
+}
+.th-btn{display:inline-flex;align-items:center;gap:.25rem;padding:.26rem .6rem;border-radius:16px;border:none;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.68rem;font-weight:500;background:transparent;color:var(--t3);transition:all .18s}
+.th-btn:hover{background:var(--bg-hov);color:var(--t2)}
+.th-btn.active{background:var(--vdim);color:var(--vlt);border:1px solid rgba(108,99,255,.3)}
+.mode-sep{width:1px;height:22px;background:var(--bdr);margin:0 .3rem}
+.mode-btn{padding:.28rem 1rem;border-radius:18px;border:1px solid var(--bdr-acc);background:transparent;color:var(--t3);font-family:'Poppins',sans-serif;font-size:.75rem;font-weight:500;cursor:pointer;transition:all .18s}
+.mode-btn.active{background:var(--vdim);color:var(--vlt);border-color:var(--violet)}
+.mode-badge{display:inline-block;padding:.08rem .38rem;border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:.55rem;background:var(--odim);color:var(--orange);border:1px solid rgba(255,140,66,.3);margin-left:.28rem;vertical-align:middle}
+.topbar-spacer{flex:1}
+
+/* Bouton partage URL */
+.btn-share{display:inline-flex;align-items:center;gap:.28rem;padding:.28rem .7rem;border-radius:16px;border:1px solid rgba(56,189,248,.35);background:var(--cdim);color:var(--cyan);font-family:'Poppins',sans-serif;font-size:.7rem;font-weight:500;cursor:pointer;transition:all .18s}
+.btn-share:hover{background:rgba(56,189,248,.18);border-color:var(--cyan)}
+
+/* ══ HEADER ══ */
+header{
+  position:relative;z-index:10;
+  padding:2.4rem 1.5rem 1.6rem;
+  border-bottom:1px solid var(--bdr);
+  text-align:center;
+  background:linear-gradient(180deg,rgba(108,99,255,.05) 0%,transparent 100%);
+}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:.45rem;
+  padding:.28rem .9rem;border-radius:20px;
+  background:var(--vdim);border:1px solid rgba(108,99,255,.28);
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--vlt);
+  margin-bottom:1rem;
+}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--violet);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.65)}}
+header h1{
+  font-family:'Rubik Dirt',cursive;
+  font-size:clamp(1.8rem,4vw,2.9rem);
+  line-height:1.1;letter-spacing:.02em;
+  background:linear-gradient(128deg,#fff 0%,var(--vlt) 40%,var(--green) 80%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:.5rem;
+}
+header .tagline{
+  font-family:'Poppins',sans-serif;font-size:.84rem;color:var(--t2);
+  max-width:640px;margin:.5rem auto 0;
+}
+
+/* ══ LAYOUT ══ */
+.forge-wrapper{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:1fr var(--sidebar-w);
+  max-width:1520px;margin:0 auto;
+  min-height:calc(100vh - 130px);
+}
+.left-col{border-right:1px solid var(--bdr);min-width:0}
+.form-panel,.student-panel{padding:2rem 2.2rem 5rem}
+.preview-panel{
+  position:sticky;top:47px;height:calc(100vh - 47px);
+  overflow-y:auto;padding:1.4rem 1.4rem 3rem;
+  display:flex;flex-direction:column;gap:.85rem;
+  background:linear-gradient(180deg,var(--bg-card) 0%,var(--bg) 100%);
+}
+
+/* ══ SAVE BAR ══ */
+.save-bar{
+  display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;
+  padding:.52rem .85rem;background:var(--bg-card);
+  border:1px solid var(--bdr);border-radius:var(--r);margin-bottom:1.2rem;
+}
+.save-label{font-family:'Poppins',sans-serif;font-size:.72rem;color:var(--t3);white-space:nowrap}
+.save-slots{display:flex;gap:.25rem;flex-wrap:wrap}
+.slot-btn{
+  padding:.2rem .52rem;border-radius:8px;border:1px solid var(--bdr-acc);
+  background:var(--bg-in);color:var(--t3);font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;cursor:pointer;transition:all .15s;max-width:110px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.slot-btn:hover{background:var(--bg-hov);color:var(--t2);border-color:var(--violet)}
+.slot-btn.has-data{border-color:rgba(0,212,170,.4);color:var(--green)}
+.btn-act{
+  display:inline-flex;align-items:center;gap:.28rem;
+  padding:.22rem .6rem;border-radius:8px;
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  cursor:pointer;transition:all .15s;border:1px solid var(--bdr-acc);
+  background:var(--bg-in);color:var(--t3);
+}
+.btn-act:hover{background:var(--bg-hov);color:var(--t2)}
+.btn-save{border-color:rgba(255,209,102,.3)!important;background:var(--gdold)!important;color:var(--gold)!important}
+.btn-save:hover{border-color:var(--gold)!important;background:rgba(255,209,102,.15)!important}
+.btn-import-lbl{
+  display:inline-flex;align-items:center;gap:.28rem;padding:.22rem .6rem;
+  border-radius:8px;border:1px solid var(--bdr-acc);background:var(--bg-in);
+  color:var(--t3);font-family:'JetBrains Mono',monospace;font-size:.65rem;cursor:pointer;transition:all .15s;
+}
+.btn-import-lbl:hover{background:var(--bg-hov);color:var(--t2);border-color:var(--violet)}
+
+/* ══ SECTIONS ══ */
+.forge-section{
+  margin-bottom:1.8rem;
+  background:var(--bg-section);
+  border:1px solid var(--bdr);border-radius:var(--rl);
+  padding:1.3rem 1.4rem 1.4rem;
+  opacity:0;transform:translateY(18px);
+  animation:up .48s forwards;
+  transition:border-color var(--tr),box-shadow var(--tr);
+}
+.forge-section:hover{border-color:var(--bdr-acc);box-shadow:0 3px 18px rgba(0,0,0,.35)}
+.forge-section:nth-child(1){animation-delay:.04s}
+.forge-section:nth-child(2){animation-delay:.08s}
+.forge-section:nth-child(3){animation-delay:.12s}
+.forge-section:nth-child(4){animation-delay:.16s}
+.forge-section:nth-child(5){animation-delay:.20s}
+.forge-section:nth-child(6){animation-delay:.24s}
+.forge-section:nth-child(7){animation-delay:.28s}
+.forge-section:nth-child(8){animation-delay:.32s}
+.forge-section:nth-child(9){animation-delay:.36s}
+.forge-section:nth-child(10){animation-delay:.40s}
+@keyframes up{to{opacity:1;transform:translateY(0)}}
+.sec-hdr{display:flex;align-items:center;gap:.65rem;margin-bottom:1.1rem;padding-bottom:.65rem;border-bottom:1px solid var(--bdr)}
+.sec-num{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--violet),#9c55ff);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:700;color:#fff;
+  box-shadow:0 0 12px rgba(108,99,255,.4);
+}
+.sec-ttl{font-family:'Poppins',sans-serif;font-size:.9rem;font-weight:600;color:var(--t1)}
+.sec-badge{
+  margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.6rem;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:.15rem .52rem;border-radius:9px;
+  background:var(--bg-in);border:1px solid var(--bdr-acc);color:var(--t3);
+}
+.sec-badge.obl{background:var(--rdim);border-color:rgba(255,77,109,.3);color:var(--ruby)}
+.sec-badge.prog{background:var(--gdim);border-color:rgba(0,212,170,.28);color:var(--green)}
+.sec-badge.nouv{background:var(--odim);border-color:rgba(255,140,66,.28);color:var(--orange)}
+.sec-badge.ref{background:var(--gdold);border-color:rgba(255,209,102,.28);color:var(--gold)}
+.sec-badge.api{background:var(--cdim);border-color:rgba(56,189,248,.28);color:var(--cyan)}
+
+/* ══ CHAMPS ══ */
+.lbl{display:block;font-family:'Poppins',sans-serif;font-size:.76rem;font-weight:500;color:var(--t2);margin-bottom:.34rem;letter-spacing:.02em}
+.req{color:var(--ruby);margin-left:2px}
+.hint{font-family:'JetBrains Mono',monospace;font-size:.67rem;color:var(--t3);margin-top:.24rem;line-height:1.5}
+.fg{margin-bottom:.82rem}
+.forge-input,.forge-select,.forge-textarea{
+  width:100%;background:var(--bg-in);
+  border:1px solid var(--bdr);border-radius:var(--r);
+  color:var(--t1);font-family:'Source Serif 4',serif;
+  font-size:.85rem;padding:.52rem .85rem;
+  transition:border-color var(--tr),box-shadow var(--tr),background var(--tr);
+  outline:none;appearance:none;
+}
+.forge-input:focus,.forge-select:focus,.forge-textarea:focus{
+  border-color:var(--violet);background:var(--bg-hov);
+  box-shadow:0 0 0 3px rgba(108,99,255,.14);
+}
+.forge-input.warn{border-color:var(--ruby)!important;box-shadow:0 0 0 3px rgba(255,77,109,.12)!important}
+.forge-input::placeholder,.forge-textarea::placeholder{color:#2e3158}
+[data-theme="light"] .forge-input::placeholder,[data-theme="light"] .forge-textarea::placeholder{color:#b0b4cc}
+[data-theme="projector"] .forge-input::placeholder,[data-theme="projector"] .forge-textarea::placeholder{color:#aaaaaa}
+.forge-select{
+  cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%236c63ff' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .85rem center;padding-right:2.4rem;
+}
+.forge-textarea{resize:vertical;min-height:72px;line-height:1.65}
+[data-theme="projector"] .forge-section{border:1.5px solid var(--bdr)}
+[data-theme="projector"] .forge-input,[data-theme="projector"] .forge-select,[data-theme="projector"] .forge-textarea{font-size:.9rem;border-color:#999}
+
+/* ══ PILLS ══ */
+.pill-group{display:flex;flex-wrap:wrap;gap:.28rem}
+.pill-in{display:none}
+.pill-lbl{
+  display:inline-flex;align-items:center;
+  padding:.25rem .68rem;border-radius:15px;
+  border:1px solid var(--bdr-acc);background:var(--bg-in);
+  font-family:'Poppins',sans-serif;font-size:.71rem;color:var(--t2);
+  cursor:pointer;transition:all .15s;user-select:none;
+}
+.pill-in:checked+.pill-lbl{background:var(--vdim);border-color:var(--violet);color:var(--vlt)}
+.pill-lbl:hover{background:var(--bg-hov);border-color:var(--bdr-acc)}
+
+/* ══ CHIPS EDUSCOL ══ */
+.echip{
+  display:inline-flex;align-items:center;
+  padding:.22rem .62rem;border-radius:12px;
+  border:1px solid var(--bdr-acc);background:var(--bg-in);
+  font-family:'JetBrains Mono',monospace;font-size:.64rem;color:var(--t3);
+  cursor:pointer;transition:all .15s;user-select:none;
+}
+.echip.on{background:var(--gdold);border-color:rgba(255,209,102,.4);color:var(--gold)}
+.echip:hover{background:var(--bg-hov);color:var(--t2)}
+
+/* ══ BLOOM SLIDER ══ */
+.bloom-wrap{position:relative;padding:.4rem 0 .3rem}
+input[type=range].bloom-range{
+  width:100%;height:5px;border-radius:3px;outline:none;
+  appearance:none;-webkit-appearance:none;
+  background:linear-gradient(90deg,var(--ruby) 0%,var(--gold) 50%,var(--green) 100%);
+  cursor:pointer;border:none;background-color:transparent;
+}
+input[type=range].bloom-range::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:18px;height:18px;border-radius:50%;
+  background:var(--violet);border:2px solid #fff;
+  box-shadow:0 0 8px rgba(108,99,255,.5);cursor:pointer;
+  transition:transform .15s;
+}
+input[type=range].bloom-range::-webkit-slider-thumb:hover{transform:scale(1.2)}
+.bloom-track{height:5px;border-radius:3px;background:linear-gradient(90deg,var(--ruby) 0%,var(--gold) 50%,var(--green) 100%);margin:.35rem 0}
+.bloom-disp{
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;
+  color:var(--vlt);margin-top:.3rem;
+  padding:.28rem .65rem;background:var(--vdim);border:1px solid rgba(108,99,255,.25);
+  border-radius:8px;display:inline-block;
+}
+
+/* ══ TOOLTIP ══ */
+.tip-wrap{position:relative;display:inline-flex;align-items:center;gap:.3rem;vertical-align:middle}
+.tip-icon{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--bg-in);border:1px solid var(--bdr-acc);font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--t3);cursor:help;flex-shrink:0}
+.tip-icon:hover,.tip-icon:focus{background:var(--vdim);color:var(--vlt);border-color:var(--violet);outline:none}
+.tip-pop{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--bg-card);border:1px solid var(--bdr-acc);border-radius:var(--r);padding:.62rem .85rem;font-family:'Source Serif 4',serif;font-size:.73rem;color:var(--t2);line-height:1.6;width:260px;z-index:500;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.tip-icon:hover+.tip-pop,.tip-icon:focus+.tip-pop{display:block}
+
+/* ══ UPLOAD ZONE ══ */
+.upzone{
+  border:2px dashed var(--bdr-acc);border-radius:var(--r);
+  padding:1rem;text-align:center;cursor:pointer;
+  transition:all .2s;background:var(--bg-in);
+}
+.upzone:hover,.upzone.over{border-color:var(--violet);background:var(--vdim)}
+.upzone-txt{font-family:'Poppins',sans-serif;font-size:.75rem;color:var(--t3)}
+.flist{margin-top:.6rem;display:flex;flex-direction:column;gap:.3rem}
+.fitem{display:flex;align-items:center;gap:.4rem;padding:.3rem .5rem;background:var(--bg-hov);border-radius:6px;font-size:.7rem}
+.fname{flex:1;font-family:'JetBrains Mono',monospace;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fsize{color:var(--t3);font-family:'JetBrains Mono',monospace;font-size:.62rem}
+.frem{background:none;border:none;color:var(--ruby);cursor:pointer;font-size:.8rem;padding:0 .2rem;opacity:.6;transition:opacity .15s}
+.frem:hover{opacity:1}
+.pdf-warn{margin-top:.5rem;padding:.45rem .7rem;background:var(--odim);border:1px solid rgba(255,140,66,.28);border-radius:var(--r);font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--orange);line-height:1.5;display:none}
+.bac-info{padding:.65rem .9rem;background:var(--cdim);border:1px solid rgba(56,189,248,.25);border-radius:var(--r);font-family:'Source Serif 4',serif;font-size:.78rem;color:var(--t2);line-height:1.6;margin-bottom:.4rem}
+.bac-info .bi-ttl{font-family:'Poppins',sans-serif;font-size:.76rem;font-weight:600;color:var(--cyan);margin-bottom:.35rem}
+
+/* ══ BOUTONS ACTION ══ */
+.btn-forge{
+  display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+  padding:.68rem 1.8rem;border-radius:var(--r);border:none;
+  background:linear-gradient(135deg,var(--violet),#9c55ff);
+  color:#fff;font-family:'Poppins',sans-serif;font-size:.85rem;font-weight:600;
+  cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(108,99,255,.35);
+}
+.btn-forge:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(108,99,255,.5)}
+.btn-forge:active{transform:translateY(0)}
+.btn-reset{display:inline-flex;align-items:center;gap:.28rem;padding:.38rem .85rem;border-radius:var(--r);border:1px solid var(--bdr-acc);background:transparent;color:var(--t3);font-family:'Poppins',sans-serif;font-size:.76rem;cursor:pointer;transition:all .18s}
+.btn-reset:hover{background:var(--bg-hov);color:var(--t2)}
+.btn-claude-ai{display:inline-flex;align-items:center;gap:.3rem;padding:.5rem .95rem;border-radius:var(--r);border:1px solid rgba(0,212,170,.4);background:var(--gdim);color:var(--green);font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;transition:all .18s}
+.btn-claude-ai:hover:not(:disabled){background:rgba(0,212,170,.18);border-color:var(--green);box-shadow:0 0 12px rgba(0,212,170,.2)}
+.btn-claude-ai:disabled{opacity:.35;cursor:not-allowed}
+.btn-copy{display:inline-flex;align-items:center;gap:.28rem;padding:.38rem .85rem;border-radius:var(--r);border:1px solid var(--bdr-acc);background:transparent;color:var(--t2);font-family:'Poppins',sans-serif;font-size:.76rem;cursor:pointer;transition:all .18s}
+.btn-copy:hover:not(:disabled){background:var(--vdim);border-color:var(--violet);color:var(--vlt)}
+.btn-copy:disabled{opacity:.35;cursor:not-allowed}
+
+/* ══ PREVIEW PANEL ══ */
+.pv-topbar{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.pv-ttl{font-family:'Poppins',sans-serif;font-size:.76rem;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.06em}
+.tok-badge{font-family:'JetBrains Mono',monospace;font-size:.66rem;padding:.17rem .5rem;border-radius:9px;background:var(--gdold);border:1px solid rgba(255,209,102,.2);color:var(--gold)}
+.pv-actions{margin-left:auto;display:flex;gap:.4rem;flex-wrap:wrap}
+
+/* Score qualité */
+.q-panel{padding:.78rem .95rem;border-radius:var(--rl);background:var(--bg-card);border:1px solid var(--bdr)}
+.q-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:.45rem}
+.q-lbl{font-family:'Poppins',sans-serif;font-size:.68rem;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.06em}
+.q-pct{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--vlt);font-weight:700}
+.q-track{height:5px;background:var(--bdr);border-radius:3px;overflow:hidden;margin-bottom:.35rem}
+.q-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--ruby) 0%,var(--gold) 50%,var(--green) 100%);background-size:200% 100%;transition:width .5s cubic-bezier(.4,0,.2,1);width:0%}
+.q-desc{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--t3);line-height:1.5}
+/* Avertissements sémantiques */
+.q-warns{margin-top:.4rem;display:flex;flex-direction:column;gap:.22rem}
+.q-warn-item{font-family:'JetBrains Mono',monospace;font-size:.63rem;color:var(--orange);padding:.2rem .45rem;background:var(--odim);border-radius:5px;border-left:2px solid var(--orange)}
+
+/* Boîte prompt */
+.pv-wrap{flex:1;position:relative;min-height:260px}
+.pv-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;background:var(--code);border:1px solid var(--bdr);border-radius:var(--rl);font-family:'Source Serif 4',serif;font-size:.78rem;color:var(--t3);text-align:center;line-height:1.7;padding:1.5rem}
+pre#pp{margin:0;padding:0;min-height:260px;border-radius:var(--rl)!important;font-family:'JetBrains Mono',monospace!important;font-size:.71rem!important;line-height:1.85!important;overflow-y:auto;border:1px solid var(--bdr)!important;background:var(--code)!important}
+pre#pp.hidden{display:none}
+.hljs{background:var(--code)!important;color:#c5cae9!important;padding:1rem!important}
+.hljs-tag,.hljs-name{color:#7986cb!important}
+.hljs-attr{color:#00d4aa!important}
+.hljs-string{color:#ff8c42!important}
+.hljs-comment{color:#4e5278!important;font-style:italic!important}
+[data-theme="projector"] pre#pp{background:#f0f0f0!important}
+[data-theme="projector"] .hljs{background:#f0f0f0!important;color:#111!important}
+
+/* ══ PANNEAU RÉPONSE CLAUDE (API in-situ) ══ */
+.api-panel{
+  border:1px solid rgba(56,189,248,.3);border-radius:var(--rl);
+  background:var(--bg-card);overflow:hidden;
+}
+.api-panel-hdr{
+  display:flex;align-items:center;gap:.5rem;
+  padding:.6rem .9rem;border-bottom:1px solid var(--bdr);
+  background:var(--cdim);
+}
+.api-panel-ttl{font-family:'Poppins',sans-serif;font-size:.72rem;font-weight:600;color:var(--cyan);text-transform:uppercase;letter-spacing:.06em}
+.api-key-wrap{display:flex;gap:.4rem;align-items:center;padding:.65rem .9rem;border-bottom:1px solid var(--bdr);background:var(--bg-section)}
+.api-key-input{flex:1;background:var(--bg-in);border:1px solid var(--bdr);border-radius:6px;color:var(--t1);font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:.38rem .65rem;outline:none;transition:border-color var(--tr)}
+.api-key-input:focus{border-color:var(--cyan)}
+.btn-api-run{display:inline-flex;align-items:center;gap:.28rem;padding:.38rem .85rem;border-radius:6px;border:none;background:linear-gradient(135deg,var(--cyan),#0ea5e9);color:#fff;font-family:'Poppins',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap}
+.btn-api-run:hover:not(:disabled){box-shadow:0 3px 12px rgba(56,189,248,.4)}
+.btn-api-run:disabled{opacity:.4;cursor:not-allowed}
+.api-response{
+  padding:.85rem .95rem;
+  font-family:'Source Serif 4',serif;font-size:.8rem;color:var(--t2);
+  line-height:1.75;min-height:80px;max-height:340px;overflow-y:auto;
+  white-space:pre-wrap;word-break:break-word;
+}
+.api-response.loading{color:var(--t3);font-style:italic;font-family:'JetBrains Mono',monospace;font-size:.72rem}
+.api-cursor{display:inline-block;width:2px;height:1em;background:var(--cyan);animation:blink .8s step-end infinite;vertical-align:text-bottom;margin-left:1px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.api-notice{padding:.45rem .9rem;font-family:'JetBrains Mono',monospace;font-size:.63rem;color:var(--t3);border-top:1px solid var(--bdr);background:var(--bg-section);line-height:1.5}
+
+/* Guide */
+.guide{padding:.78rem .95rem;border-radius:var(--rl);background:var(--bg-card);border:1px solid var(--bdr)}
+.guide-ttl{font-family:'Poppins',sans-serif;font-size:.68rem;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
+.guide-body{font-family:'Source Serif 4',serif;font-size:.76rem;color:var(--t2);line-height:1.65}
+
+/* ══ MODAL SAUVEGARDE ══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--bg-card);border:1px solid var(--bdr-acc);border-radius:var(--rl);padding:1.7rem 1.9rem;width:min(460px,94vw);box-shadow:0 20px 60px rgba(0,0,0,.55)}
+.modal-title{font-family:'Poppins',sans-serif;font-size:.94rem;font-weight:700;color:var(--t1);margin-bottom:1.2rem}
+.modal-label{display:block;font-family:'Poppins',sans-serif;font-size:.74rem;font-weight:500;color:var(--t2);margin-bottom:.32rem}
+.modal-input{width:100%;background:var(--bg-in);border:1px solid var(--bdr);border-radius:var(--r);color:var(--t1);font-family:'Source Serif 4',serif;font-size:.85rem;padding:.48rem .82rem;outline:none;transition:border-color var(--tr)}
+.modal-input:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(108,99,255,.14)}
+.modal-slot-btns{display:flex;gap:.35rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.modal-slot-btn{flex:1;min-width:80px;padding:.38rem .45rem;border-radius:var(--r);border:1px solid var(--bdr-acc);background:var(--bg-in);color:var(--t3);font-family:'JetBrains Mono',monospace;font-size:.68rem;cursor:pointer;transition:all .15s;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.modal-slot-btn:hover{background:var(--bg-hov);color:var(--t2)}
+.modal-slot-btn.sel{background:var(--vdim);border-color:var(--violet);color:var(--vlt);font-weight:600}
+.modal-slot-btn.has-data{border-color:rgba(0,212,170,.4);color:var(--green)}
+.modal-slot-btn.sel.has-data{background:var(--vdim);color:var(--vlt)}
+.modal-actions{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1.3rem}
+.modal-btn-cancel{padding:.4rem .95rem;border-radius:var(--r);border:1px solid var(--bdr-acc);background:transparent;color:var(--t3);font-family:'Poppins',sans-serif;font-size:.76rem;cursor:pointer;transition:all .15s}
+.modal-btn-cancel:hover{background:var(--bg-hov);color:var(--t2)}
+.modal-btn-confirm{padding:.4rem 1.15rem;border-radius:var(--r);border:1px solid rgba(108,99,255,.4);background:var(--vdim);color:var(--vlt);font-family:'Poppins',sans-serif;font-size:.76rem;font-weight:600;cursor:pointer;transition:all .15s}
+.modal-btn-confirm:hover{background:rgba(108,99,255,.2);border-color:var(--violet)}
+.modal-slots-scroll{max-height:200px;overflow-y:auto;border:1px solid var(--bdr);border-radius:var(--r);margin-bottom:1rem}
+.lib-item{display:flex;align-items:center;gap:.5rem;padding:.5rem .7rem;border-bottom:1px solid var(--bdr);cursor:pointer;transition:background .15s}
+.lib-item:last-child{border-bottom:none}
+.lib-item:hover{background:var(--bg-hov)}
+.lib-item-name{flex:1;font-family:'Poppins',sans-serif;font-size:.78rem;color:var(--t1)}
+.lib-item-date{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--t3)}
+.lib-item-del{background:none;border:none;color:var(--ruby);cursor:pointer;font-size:.8rem;opacity:.5;transition:opacity .15s;padding:.1rem .3rem}
+.lib-item-del:hover{opacity:1}
+.lib-empty{padding:.8rem;text-align:center;font-family:'Source Serif 4',serif;font-size:.78rem;color:var(--t3)}
+
+/* ══ TOAST ══ */
+.toast-msg{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(60px);background:var(--bg-card);border:1px solid var(--green);border-radius:var(--r);padding:.55rem 1.2rem;font-family:'Poppins',sans-serif;font-size:.78rem;color:var(--green);z-index:9999;opacity:0;pointer-events:none;transition:transform .24s,opacity .24s}
+.toast-msg.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast-msg.err{border-color:var(--ruby);color:var(--ruby)}
+.toast-msg.info{border-color:var(--gold);color:var(--gold)}
+
+/* ══ STUDENT PANEL ══ */
+.student-card{background:var(--bg-section);border:1px solid var(--bdr);border-radius:var(--rl);padding:1.3rem 1.5rem;margin-bottom:1.5rem}
+.student-intro{font-family:'Poppins',sans-serif;font-size:.8rem;color:var(--t2);margin-bottom:1rem;line-height:1.65;padding:.7rem .9rem;background:var(--vdim);border:1px solid rgba(108,99,255,.2);border-radius:var(--r)}
+.s-sec{font-family:'Poppins',sans-serif;font-size:.84rem;font-weight:600;color:var(--t1);margin:1rem 0 .55rem}
+.style-grid{display:grid;grid-template-columns:1fr 1fr;gap:.35rem}
+.style-card{
+  display:flex;align-items:flex-start;gap:.45rem;
+  padding:.55rem .65rem;border-radius:var(--r);
+  border:1px solid var(--bdr-acc);background:var(--bg-in);
+  cursor:pointer;transition:all .15s;
+}
+.style-card:hover{background:var(--bg-hov)}
+.style-card input{display:none}
+.style-card.sel{background:var(--vdim);border-color:var(--violet)}
+.style-card .s-ico{font-size:1rem;flex-shrink:0;margin-top:.05rem}
+.style-card .s-name{font-family:'Poppins',sans-serif;font-size:.72rem;font-weight:600;color:var(--t1)}
+.style-card .s-desc{font-family:'Source Serif 4',serif;font-size:.68rem;color:var(--t3);line-height:1.4}
+.blocked-zone{
+  padding:.6rem .85rem;border-radius:var(--r);
+  background:var(--rdim);border:1px solid rgba(255,77,109,.28);
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--t1);
+  resize:vertical;min-height:60px;line-height:1.6;
+}
+.blocked-zone::placeholder{color:var(--t3);font-style:italic}
+
+/* ══ FOOTER ══ */
+footer{position:relative;z-index:1;text-align:center;padding:1.2rem;border-top:1px solid var(--bdr);font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--t3);letter-spacing:.05em}
+footer span{color:var(--vlt)}
+footer .vv{color:var(--green)}
+
+/* ══ SÉPARATEUR ══ */
+hr.fhr{border:none;border-top:1px solid var(--bdr);margin:.85rem 0}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:960px){
+  .forge-wrapper{grid-template-columns:1fr}
+  .left-col{border-right:none;border-bottom:1px solid var(--bdr)}
+  .preview-panel{position:static;height:auto;top:auto}
+  .style-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">NSI Prompt Forge<span class="vchip">v5</span></div>
+  <div class="mode-sep"></div>
+  <button class="th-btn active" id="th-dark" onclick="setTheme('dark')">🌙 Sombre</button>
+  <button class="th-btn" id="th-light" onclick="setTheme('light')">☀️ Clair</button>
+  <button class="th-btn" id="th-projector" onclick="setTheme('projector')" title="Vidéoprojecteur">📽 Vidéo</button>
+  <div class="mode-sep"></div>
+  <button class="mode-btn active" id="mb-prof" onclick="setMode('prof')">Enseignant</button>
+  <button class="mode-btn" id="mb-student" onclick="setMode('student')">Élève <span class="mode-badge">v5</span></button>
+  <div class="topbar-spacer"></div>
+  <button class="btn-share" onclick="shareURL()" title="Partager ce profil par lien URL">
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="13" cy="3" r="2" stroke="currentColor" stroke-width="1.4"/><circle cx="13" cy="13" r="2" stroke="currentColor" stroke-width="1.4"/><circle cx="3" cy="8" r="2" stroke="currentColor" stroke-width="1.4"/><path d="M5 7l6-3M5 9l6 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    Partager
+  </button>
+</div>
+
+<header>
+  <div class="eyebrow"><div class="dot"></div>NSI Prompt Forge — Baccalauréat 2026</div>
+  <h1>Générateur de Prompts NSI</h1>
+  <p class="tagline">Construisez des prompts structurés XML de qualité maximale pour la création de ressources pédagogiques NSI. API Claude intégrée · Bibliothèque de profils · Partage par URL · Mode élève enrichi.</p>
+</header>
+
+<div class="forge-wrapper">
+<div class="left-col">
+
+<!-- ══════════ FORMULAIRE ENSEIGNANT ══════════ -->
+<div class="form-panel" id="prof-panel">
+
+  <!-- SAVE BAR -->
+  <div class="save-bar">
+    <span class="save-label">Bibliothèque :</span>
+    <div class="save-slots" id="save-slots-container">
+      <!-- rempli dynamiquement -->
+    </div>
+    <button class="btn-act btn-save" onclick="showSaveModal()" style="margin-left:auto">💾 Sauvegarder</button>
+    <button class="btn-act" onclick="showLibModal()" style="border-color:rgba(56,189,248,.35);background:var(--cdim);color:var(--cyan)">📚 Bibliothèque</button>
+    <button class="btn-act" onclick="exportJSON()">⬇ Export</button>
+    <label class="btn-import-lbl" title="Importer un profil JSON">⬆ Import<input type="file" id="import-json-input" accept=".json" style="display:none" onchange="importJSON(this)"></label>
+  </div>
+
+  <!-- §1 Rôle -->
+  <div class="forge-section">
+    <div class="sec-hdr"><div class="sec-num">1</div><div class="sec-ttl">Rôle et posture de Claude</div><div class="sec-badge obl">Obligatoire</div></div>
+    <div class="fg">
+      <label class="lbl">Profil expert assigné <span class="req">*</span></label>
+      <select class="forge-select" id="role-profile">
+        <option value="">— Sélectionner un profil —</option>
+        <option value="professeur_nsi_senior">Professeur de NSI expérimenté (lycée général)</option>
+        <option value="formateur_nsi">Formateur académique NSI (formation continue)</option>
+        <option value="ingenieur_pedagogique">Ingénieur pédagogique spécialiste du numérique</option>
+        <option value="inspecteur_nsi">Inspecteur pédagogique de la spécialité NSI</option>
+        <option value="concepteur_bac">Concepteur de sujets d'épreuves du baccalauréat</option>
+        <option value="didacticien">Didacticien de l'informatique et des sciences du numérique</option>
+        <option value="custom">Autre profil (préciser ci-dessous)</option>
+      </select>
+    </div>
+    <div id="role-cw" style="display:none">
+      <label class="lbl">Préciser le profil expert</label>
+      <input type="text" class="forge-input" id="role-custom" placeholder="Ex : chercheur en didactique de l'informatique...">
+    </div>
+  </div>
+
+  <!-- §2 Contexte -->
+  <div class="forge-section">
+    <div class="sec-hdr"><div class="sec-num">2</div><div class="sec-ttl">Contexte classe et établissement</div><div class="sec-badge obl">Obligatoire</div></div>
+    <div class="row g-3 fg">
+      <div class="col-6">
+        <label class="lbl">Niveau <span class="req">*</span></label>
+        <select class="forge-select" id="level" onchange="checkLevelNotionCoherence()">
+          <option value="">— Niveau —</option>
+          <option value="premiere">Première NSI</option>
+          <option value="terminale">Terminale NSI</option>
+          <option value="premiere_terminale">Première et Terminale</option>
+        </select>
+      </div>
+      <div class="col-6">
+        <label class="lbl">Effectif indicatif</label>
+        <select class="forge-select" id="class-size">
+          <option value="">— Effectif —</option>
+          <option value="moins_15">Moins de 15 élèves</option>
+          <option value="15_20">15 à 20 élèves</option>
+          <option value="plus_20">Plus de 20 élèves</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="lbl">Profil général de la classe</label>
+      <select class="forge-select" id="class-profile">
+        <option value="">— Caractéristiques des élèves —</option>
+        <option value="heterogene">Groupe hétérogène (niveaux variés)</option>
+        <option value="bonne_base">Bonne maîtrise algorithmique générale</option>
+        <option value="difficultes">Difficultés récurrentes en programmation</option>
+        <option value="motive">Groupe très motivé et autonome</option>
+        <option value="premiere_annee">Débutants en programmation (Première)</option>
+      </select>
+    </div>
+    <div>
+      <label class="lbl">Contexte particulier de l'établissement ou du groupe</label>
+      <textarea class="forge-textarea" id="class-context" placeholder="Ex : lycée REP+, ressources numériques limitées, préparation intensive au bac, élèves à besoins particuliers..."></textarea>
+    </div>
+  </div>
+
+  <!-- §3 Thème NSI -->
+  <div class="forge-section">
+    <div class="sec-hdr"><div class="sec-num">3</div><div class="sec-ttl">Thème et notions du programme NSI</div><div class="sec-badge prog">Programme BO</div></div>
+    <div class="fg">
+      <label class="lbl">
+        <span class="tip-wrap">Thèmes principaux <span class="req">*</span>
+          <span class="tip-icon" tabindex="0">?</span>
+          <span class="tip-pop">Sélection multiple possible (Ctrl/Cmd+clic). Utile pour les sujets EP1 couvrant plusieurs thèmes (ex. T1+T5). Un avertissement apparaît si les thèmes sont incohérents avec le niveau sélectionné.</span>
+        </span>
+      </label>
+      <select class="forge-select" id="theme-main" multiple onchange="updateNotions();checkLevelNotionCoherence()" style="min-height:105px;background-image:none;padding-right:.88rem">
+        <optgroup label="PREMIÈRE NSI">
+          <option value="P1">P1 — Représentation des données : types et valeurs de base</option>
+          <option value="P2">P2 — Représentation des données : types construits</option>
+          <option value="P3">P3 — Traitement de données en tables</option>
+          <option value="P4">P4 — Interactions humain / machine sur le Web</option>
+          <option value="P5">P5 — Architectures matérielles et systèmes d'exploitation</option>
+          <option value="P6">P6 — Langages et programmation</option>
+          <option value="P7">P7 — Algorithmique</option>
+        </optgroup>
+        <optgroup label="TERMINALE NSI">
+          <option value="T1">T1 — Structures de données</option>
+          <option value="T2">T2 — Bases de données</option>
+          <option value="T3">T3 — Architectures matérielles, SE et réseaux</option>
+          <option value="T4">T4 — Langages et programmation</option>
+          <option value="T5">T5 — Algorithmique</option>
+        </optgroup>
+      </select>
+      <div class="hint">Ctrl / Cmd + clic pour sélection multiple (sujets interdisciplinaires EP1).</div>
+    </div>
+    <div class="fg">
+      <label class="lbl">Notions et contenus ciblés</label>
+      <select class="forge-select" id="notion-select" multiple style="min-height:95px;background-image:none;padding-right:.88rem">
+        <option disabled>— Choisir un thème d'abord —</option>
+      </select>
+      <div class="hint">Ctrl / Cmd + clic pour sélection multiple.</div>
+    </div>
+    <div class="fg">
+      <label class="lbl">
+        <span class="tip-wrap">Position dans la progression spiralaire
+          <span class="tip-icon" tabindex="0">?</span>
+          <span class="tip-pop">La progression spiralaire désigne la reprise d'une notion à plusieurs moments de l'année avec une profondeur croissante. Guide le degré de guidage et l'exigence attendus dans la ressource produite.</span>
+        </span>
+      </label>
+      <select class="forge-select" id="spiral">
+        <option value="">— Position dans la progression —</option>
+        <option value="decouverte">Première découverte de la notion</option>
+        <option value="approfondissement">Approfondissement d'une notion déjà vue</option>
+        <option value="consolidation">Consolidation et systématisation</option>
+        <option value="transfert">Transfert vers un nouveau contexte applicatif</option>
+        <option value="synthese">Synthèse et liens inter-notions</option>
+        <option value="remediation">Remédiation ciblée sur une difficulté identifiée</option>
+      </select>
+    </div>
+    <div>
+      <label class="lbl">Précisions didactiques complémentaires</label>
+      <textarea class="forge-textarea" id="notion-prec" placeholder="Ex : insister sur la récursivité terminale, lien avec la complexité O(log n), notion d'invariant de boucle, articulation avec les listes Python..."></textarea>
+    </div>
+  </div>
+
+  <!-- §4 Type de ressource -->
+  <div class="forge-section">
+    <div class="sec-hdr"><div class="sec-num">4</div><div class="sec-ttl">Type de ressource pédagogique</div><div class="sec-badge obl">Obligatoire</div></div>
+    <div class="fg">
+      <label class="lbl">Catégorie principale <span class="req">*</span></label>
+      <select class="forge-select" id="resource-type" onchange="updateResourceSub();checkDurationCoherence()">
+        <option value="">— Type de ressource —</option>
+        <option value="tp">Travaux pratiques (TP)</option>
+        <option value="activite">Activité pédagogique</option>
+        <option value="cours">Cours structuré</option>
+        <option value="evaluation">Évaluation sommative ou formative</option>
+        <option value="bac_ecrit">Sujet d'épreuve écrite — baccalauréat</option>
+        <option value="bac_pratique">Sujet d'épreuve pratique — baccalauréat (nouvelle forme 2026)</option>
+        <option value="correction">Corrigé ou barème détaillé</option>
+        <option value="support">Support de cours (fiche de révision, résumé)</option>
+      </select>
+    </div>
+    <div id="res-sub-wrap" style="display:none" class="fg"><div id="res-sub-cont"></div></div>
+    <div id="bac-info" style="display:none" class="fg">
+      <div class="bac-info">
+        <div class="bi-ttl">Épreuve pratique — Nouvelle forme 2026</div>
+        <p>L'épreuve pratique NSI 2026 comprend deux exercices sur machine (1 h) : un exercice de programmation guidée (code à compléter) et un exercice de programmation libre sur un problème algorithmique. Les sujets sont publiés dans la banque nationale Eduscol.</p>
+      </div>
+    </div>
+    <div class="row g-3">
+      <div class="col-6">
+        <label class="lbl">Durée prévue</label>
+        <select class="forge-select" id="duration" onchange="checkDurationCoherence()">
+          <option value="">— Durée —</option>
+          <option value="20min">20 minutes</option>
+          <option value="30min">30 minutes</option>
+          <option value="45min">45 minutes</option>
+          <option value="1h">1 heure</option>
+          <option value="1h30">1 heure 30</option>
+          <option value="2h">2 heures</option>
+          <option value="3h">3 heures et plus</option>
+          <option value="pluriseances">Plusieurs séances</option>
+        </select>
+      </div>
+      <div class="col-6">
+        <label class="lbl">Modalité de travail</label>
+        <select class="forge-select" id="work-mode">
+          <option value="">— Modalité —</option>
+          <option value="individuel">Individuel</option>
+          <option value="binome">En binôme</option>
+          <option value="groupe">En groupe (3-4 élèves)</option>
+          <option value="classe_entiere">Classe entière (cours dialogué)</option>
+          <option value="mixte">Mixte</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- §5 Objectifs pédagogiques -->
+  <div class="forge-section">
+    <div class="sec-hdr"><div class="sec-num">5</div><div class="sec-ttl">Objectifs pédagogiques</div><div class="sec-badge obl">Obligatoire</div></div>
+    <div class="fg">
+      <label class="lbl">Objectif principal <span class="req">*</span>
+        <span class="tip-wrap">
+          <span class="tip-icon" tabindex="0">?</span>
+          <span class="tip-pop">Décrivez précisément ce que l'élève doit savoir faire à l'issue de la ressource. Commencez par un verbe d'action : "Être capable de...", "Savoir implémenter...", "Comprendre et expliquer..."</span>
+        </span>
+      </label>
+      <textarea class="forge-textarea" id="main-objective" rows="3" placeholder="Ex : Être capable d'implémenter et d'analyser un algorithme de tri fusion en Python, en justifiant sa complexité O(n log n) par rapport au tri par insertion."></textarea>
+    </div>
+    <div class="fg">
+      <label class="lbl">
+        <span class="tip-wrap">Niveau taxonomique de Bloom visé
+          <span class="tip-icon" tabindex="0">?</span>
+          <span class="tip-pop">La taxonomie de Bloom structure les objectifs cognitifs en 6 niveaux croissants. Ce paramètre conditionne la profondeur des questions et la complexité des tâches demandées à Claude.</span>
+        </span>
+      </label>
+      <div class="bloom-wrap">
+        <div class="bloom-track"></div>
+        <input type="range" class="bloom-range" id="bloom-level" min="1" max="6" value="3" oninput="updateBloom()">
+        <div class="bloom-disp" id="bloom-disp">Niveau 3 — Appliquer</div>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="lbl">Compétences NSI à mobiliser</label>
+      <div class="pill-group">
+        <input type="checkbox" class="pill-in" id="c1" name="comp" value="Analyser et décomposer un problème"><label class="pill-lbl" for="c1">Analyser</label>
+        <input type="checkbox" class="pill-in" id="c2" name="comp" value="Concevoir et rédiger un algorithme"><label class="pill-lbl" for="c2">Algorithmiser</label>
+        <input type="checkbox" class="pill-in" id="c3" name="comp" value="Coder et implémenter en Python"><label class="pill-lbl" for="c3">Coder</label>
+        <input type="checkbox" class="pill-in" id="c4" name="comp" value="Tester et déboguer un programme"><label class="pill-lbl" for="c4">Tester</label>
+        <input type="checkbox" class="pill-in" id="c5" name="comp" value="Documenter et communiquer"><label class="pill-lbl" for="c5">Documenter</label>
+        <input type="checkbox" class="pill-in" id="c6" name="comp" value="Modéliser et abstraire"><label class="pill-lbl" for="c6">Modéliser</label>
+        <input type="checkbox" class="pill-in" id="c7" name="comp" value="Simuler et expérimenter"><label class="pill-lbl" for="c7">Simuler</label>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="lbl">Capacités AGATHE évaluées
+        <span class="tip-wrap">
+          <span class="tip-icon" tabindex="0">?</span>
+          <span class="tip-pop">AGATHE est le référentiel d'évaluation de l'épreuve pratique NSI. Sélectionner les capacités visées permet à Claude de structurer la grille d'évaluation correspondante.</span>
+        </span>
+      </label>
+      <div class="pill-group">
+        <input type="checkbox" class="pill-in" id="a1" name="agathe" value="Analyser / Comprendre"><label class="pill-lbl" for="a1">A — Analyser</label>
+        <input type="checkbox" class="pill-in" id="a2" name="agathe" value="Généraliser / Abstraire"><label class="pill-lbl" for="a2">G — Généraliser</label>
+        <input type="checkbox" class="pill-in" id="a3" name="agathe" value="Adapter / Transformer"><label class="pill-lbl" for="a3">A — Adapter</label>
+        <input type="checkbox" class="pill-in" id="a4" name="agathe" value="Traduire / Transposer (vers un code)"><label class="pill-lbl" for="a4">T — Traduire</label>
+        <input type="checkbox" class="pill-in" id="a5" name="agathe" value="Hybrider / Combiner"><label class="pill-lbl" for="a5">H — Hybrider</label>
+        <input type="checkbox" class="pill-in" id="a6" name="agathe" value="Évaluer / Valider"><label class="pill-lbl" for="a6">E — Évaluer</label>
+      </div>
+    </div>
+    <div>
+      <label class="lbl">Prérequis attendus des élèves</label>
+      <textarea class="forge-textarea" id="prerequisites" placeholder="Ex : maîtrise des listes Python, notion de récursivité vue en cours, TP sur les piles déjà effectué..."></textarea>
+    </div>
+  </div>
+
+  <!-- §6 Langue, format, différenciation -->
+  <div class="forge-section">
+    <div class="sec-hdr"><div class="sec-num">6</div><div class="sec-ttl">Format, style et différenciation</div><div class="sec-badge nouv">Enrichi v5</div></div>
+    <div class="fg">
+      <label class="lbl">Langages de programmation autorisés</label>
+      <div class="pill-group">
+        <input type="checkbox" class="pill-in" id="l1" name="lang" value="Python 3"><label class="pill-lbl" for="l1">Python 3</label>
+        <input type="checkbox" class="pill-in" id="l2" name="lang" value="SQL (SQLite)"><label class="pill-lbl" for="l2">SQL / SQLite</label>
+        <input type="checkbox" class="pill-in" id="l3" name="lang" value="HTML/CSS"><label class="pill-lbl" for="l3">HTML / CSS</label>
+        <input type="checkbox" class="pill-in" id="l4" name="lang" value="JavaScript"><label class="pill-lbl" for="l4">JavaScript</label>
+        <input type="checkbox" class="pill-in" id="l5" name="lang" value="Pseudo-code algorithmique"><label class="pill-lbl" for="l5">Pseudo-code</label>
+        <input type="checkbox" class="pill-in" id="l6" name="lang" value="Assembleur (langage machine simplifié)"><label class="pill-lbl" for="l6">Assembleur</label>
+      </div>
+    </div>
+    <div class="row g-3 fg">
+      <div class="col-6">
+        <label class="lbl">Format de sortie</label>
+        <select class="forge-select" id="output-format">
+          <option value="">— Format —</option>
+          <option value="markdown">Markdown structuré</option>
+          <option value="html_complet">Page HTML autonome</option>
+          <option value="latex">Document LaTeX</option>
+          <option value="pdf_ready">Format prêt à imprimer</option>
+          <option value="numerique_interactif">Ressource numérique interactive</option>
+          <option value="libre">Format libre adapté</option>
+        </select>
+      </div>
+      <div class="col-6">
+        <label class="lbl">Ton rédactionnel</label>
+        <select class="forge-select" id="tone">
+          <option value="">— Ton —</option>
+          <option value="academique">Académique et rigoureux</option>
+          <option value="pedagogique">Pédagogique et bienveillant</option>
+          <option value="concis">Concis et direct (examen)</option>
+          <option value="progressif">Progressif et guidé</option>
+          <option value="ouvert">Ouvert et interrogatif (découverte)</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="lbl">Options de structuration</label>
+      <div class="pill-group">
+        <input type="checkbox" class="pill-in" id="t-corr" name="toggle" value="t-corr"><label class="pill-lbl" for="t-corr">Inclure corrigé</label>
+        <input type="checkbox" class="pill-in" id="t-bar" name="toggle" value="t-bar"><label class="pill-lbl" for="t-bar">Barème détaillé</label>
+        <input type="checkbox" class="pill-in" id="t-diff" name="toggle" value="t-diff"><label class="pill-lbl" for="t-diff">Différenciation pédagogique</label>
+        <input type="checkbox" class="pill-in" id="t-ebep" name="toggle" value="t-ebep"><label class="pill-lbl" for="t-ebep">Adaptation EBEP</label>
+        <input type="checkbox" class="pill-in" id="t-num" name="toggle" value="t-num"><label class="pill-lbl" for="t-num">Numérotation EP1-style</label>
+      </div>
+    </div>
+    <div>
+      <label class="lbl">Contraintes de format spécifiques</label>
+      <textarea class="forge-textarea" id="fmt-constr" placeholder="Ex : maximum 2 pages recto, police 12pt, en-tête établissement obligatoire, sans emoji..."></textarea>
+    </div>
+  </div>
+
+  <!-- §7 Références officielles -->
+  <div class="forge-section">
+    <div class="sec-hdr"><div class="sec-num">7</div><div class="sec-ttl">Références officielles et documents</div><div class="sec-badge ref">Eduscol</div></div>
+    <div class="fg">
+      <label class="lbl">Ressources officielles Eduscol à mobiliser</label>
+      <div class="pill-group" id="edu-chips" style="gap:.28rem">
+        <span class="echip" data-val="Ressources Eduscol NSI Première" onclick="toggleChip(this)">Eduscol NSI 1re</span>
+        <span class="echip" data-val="Ressources Eduscol NSI Terminale" onclick="toggleChip(this)">Eduscol NSI Tle</span>
+        <span class="echip" data-val="Banque de sujets EP2 Eduscol 2024-2026" onclick="toggleChip(this)">Banque EP2</span>
+        <span class="echip" data-val="Grille AGATHE officielle" onclick="toggleChip(this)">Grille AGATHE</span>
+        <span class="echip" data-val="Programme NSI BO 2019 et compléments" onclick="toggleChip(this)">BO NSI 2019</span>
+        <span class="echip" data-val="Annales officielles NSI 2022-2025" onclick="toggleChip(this)">Annales 2022-25</span>
+        <span class="echip" data-val="Repères de progressivité NSI Eduscol" onclick="toggleChip(this)">Progressivité</span>
+        <span class="echip" data-val="Ressources d'accompagnement IA Eduscol" onclick="toggleChip(this)">IA Eduscol</span>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="lbl">Références documentaires précises</label>
+      <textarea class="forge-textarea" id="doc-refs" placeholder="Ex : Chapitre 12 du manuel Hachette NSI Terminale, sujet EP1 zéro 2024 exercice 3, cours en ligne Lumni NSI graphes..."></textarea>
+    </div>
+    <div class="fg">
+      <label class="lbl">Documents joints (glisser-déposer ou cliquer)</label>
+      <div class="upzone" id="upzone" onclick="document.getElementById('file-input').click()">
+        <input type="file" id="file-input" multiple accept=".py,.txt,.md,.csv,.json,.pdf" style="display:none">
+        <div class="upzone-txt">Glisser les fichiers ici ou cliquer pour parcourir<br><span style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--t3)">.py .txt .md .csv .json .pdf — 5 Mo max par fichier</span></div>
+      </div>
+      <div class="flist" id="flist"></div>
+      <div class="pdf-warn" id="pdf-warn">PDF joint : le contenu textuel n'est pas extractible ici. Décrivez le document dans les références ci-dessus pour que Claude s'y adapte précisément.</div>
+    </div>
+  </div>
+
+  <!-- §8 Exemples few-shot -->
+  <div class="forge-section">
+    <div class="sec-hdr"><div class="sec-num">8</div><div class="sec-ttl">Exemples few-shot et contraintes négatives</div><div class="sec-badge ref">Qualité +</div></div>
+    <div class="fg">
+      <label class="lbl">
+        <span class="tip-wrap">Exemple à suivre (few-shot positif)
+          <span class="tip-icon" tabindex="0">?</span>
+          <span class="tip-pop">Le few-shot est la technique la plus puissante pour guider Claude. Collez un extrait de ressource exemplaire : question bien formulée, style d'énoncé, niveau de détail attendu. Claude s'alignera sur ce modèle.</span>
+        </span>
+      </label>
+      <textarea class="forge-textarea" id="ex-pos" rows="4" placeholder="Collez ici un exemple de question ou de ressource exemplaire que Claude devra imiter en termes de style, niveau et structure..."></textarea>
+    </div>
+    <div class="fg">
+      <label class="lbl">Exemple à éviter (few-shot négatif)</label>
+      <textarea class="forge-textarea" id="ex-neg" rows="3" placeholder="Ex : éviter les questions trop fermées, les formulations ambiguës, les exercices hors programme..."></textarea>
+    </div>
+    <div>
+      <label class="lbl">Interdictions explicites</label>
+      <textarea class="forge-textarea" id="neg-constr" placeholder="Ex : ne pas utiliser de bibliothèques tierces (numpy, pandas), ne pas introduire la notion de décorateur, ne pas dépasser 2 sous-questions par exercice..."></textarea>
+    </div>
+  </div>
+
+  <!-- §9 Instructions complémentaires -->
+  <div class="forge-section">
+    <div class="sec-hdr"><div class="sec-num">9</div><div class="sec-ttl">Instructions complémentaires</div><div class="sec-badge">Optionnel</div></div>
+    <div>
+      <label class="lbl">Consignes libres supplémentaires pour Claude</label>
+      <textarea class="forge-textarea" id="extra" rows="4" placeholder="Ex : adapter pour une séquence en salle informatique avec VSCode, prévoir un QR code vers les ressources, contextualiser avec un projet Sokoban déjà en cours en classe..."></textarea>
+    </div>
+  </div>
+
+  <!-- BOUTONS GÉNÉRATION -->
+  <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:1rem">
+    <button class="btn-forge" style="flex:1;min-width:200px" onclick="generatePrompt()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      Générer le prompt
+    </button>
+    <button class="btn-claude-ai" id="btn-claude-ai" onclick="openInClaude()" disabled title="Générez d'abord votre prompt">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="margin-right:.2rem"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M2 17l10 5 10-5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      Ouvrir dans Claude.ai
+    </button>
+  </div>
+
+</div><!-- /form-panel -->
+
+<!-- ══════════ PANNEAU ÉLÈVE ══════════ -->
+<div class="student-panel" id="student-panel" style="display:none">
+  <div class="student-card">
+    <div class="student-intro">
+      Ce mode génère un prompt optimisé pour qu'un élève de NSI puisse interroger Claude directement — sans connaissance de l'ingénierie de prompt. Remplis les champs ci-dessous et clique sur « Générer mon prompt ».
+    </div>
+
+    <div class="s-sec">1. Ton niveau et ton chapitre</div>
+    <div class="row g-3 fg">
+      <div class="col-6">
+        <label class="lbl">Niveau <span class="req">*</span></label>
+        <select class="forge-select" id="s-level">
+          <option value="">— Niveau —</option>
+          <option value="premiere">Première NSI</option>
+          <option value="terminale">Terminale NSI</option>
+        </select>
+      </div>
+      <div class="col-6">
+        <label class="lbl">Chapitre <span class="req">*</span></label>
+        <select class="forge-select" id="s-theme">
+          <option value="">— Chapitre —</option>
+          <optgroup label="PREMIÈRE NSI">
+            <option value="P1">Représentation des données (types de base)</option>
+            <option value="P2">Représentation des données (types construits)</option>
+            <option value="P3">Traitement de données en tables</option>
+            <option value="P4">Web — HTML, CSS, HTTP</option>
+            <option value="P5">Architecture matérielle et OS</option>
+            <option value="P6">Langages et programmation</option>
+            <option value="P7">Algorithmique</option>
+          </optgroup>
+          <optgroup label="TERMINALE NSI">
+            <option value="T1">Structures de données (listes, piles, files, arbres, graphes)</option>
+            <option value="T2">Bases de données et SQL</option>
+            <option value="T3">Architectures, SE et réseaux</option>
+            <option value="T4">Langages, récursivité, POO</option>
+            <option value="T5">Algorithmique avancée</option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+
+    <div class="s-sec">2. Notions précises souhaitées</div>
+    <div class="fg">
+      <select class="forge-select" id="s-notion" multiple style="min-height:85px;background-image:none;padding-right:.88rem">
+        <option disabled>— Choisir le chapitre d'abord —</option>
+      </select>
+      <div class="hint">Ctrl / Cmd + clic pour sélection multiple.</div>
+    </div>
+
+    <div class="s-sec">3. Type de travail <span class="req">*</span></div>
+    <div class="fg">
+      <select class="forge-select" id="s-type">
+        <option value="">— Ce que tu veux faire —</option>
+        <option value="exercices_guides">Exercices guidés pas à pas avec explications</option>
+        <option value="qcm">QCM avec justification des réponses</option>
+        <option value="tp_python">Mini-TP Python avec code à compléter</option>
+        <option value="defi">Défi algorithmique en autonomie</option>
+        <option value="flashcards">Fiches de révision des notions clés</option>
+        <option value="annale">Exercice type annale du baccalauréat</option>
+        <option value="explication">Explication d'une notion que je n'ai pas comprise</option>
+        <option value="correction">Correction et analyse de mon code</option>
+      </select>
+    </div>
+
+    <div class="s-sec">4. Ton niveau sur ce chapitre</div>
+    <div class="fg">
+      <div class="pill-group">
+        <input type="radio" class="pill-in" id="sm1" name="s-mastery" value="debutant"><label class="pill-lbl" for="sm1">Débutant — j'ai besoin de rappels</label>
+        <input type="radio" class="pill-in" id="sm2" name="s-mastery" value="intermediaire"><label class="pill-lbl" for="sm2">Intermédiaire — bases acquises</label>
+        <input type="radio" class="pill-in" id="sm3" name="s-mastery" value="avance"><label class="pill-lbl" for="sm3">Avancé — je veux un vrai défi</label>
+      </div>
+    </div>
+
+    <div class="s-sec">5. Style d'explication préféré</div>
+    <div class="style-grid fg" id="style-grid">
+      <div class="style-card" id="style-analogie" onclick="selectStyle('analogie')">
+        <input type="radio" name="s-style" value="analogie">
+        <div><div class="s-ico">🎭</div></div>
+        <div><div class="s-name">Par analogie</div><div class="s-desc">Comparaisons avec la vie réelle pour comprendre intuitivement</div></div>
+      </div>
+      <div class="style-card" id="style-exemple" onclick="selectStyle('exemple')">
+        <input type="radio" name="s-style" value="exemple">
+        <div><div class="s-ico">💡</div></div>
+        <div><div class="s-name">Par l'exemple</div><div class="s-desc">Beaucoup d'exemples concrets et de cas pratiques</div></div>
+      </div>
+      <div class="style-card" id="style-preuve" onclick="selectStyle('preuve')">
+        <input type="radio" name="s-style" value="preuve">
+        <div><div class="s-ico">📐</div></div>
+        <div><div class="s-name">Par la preuve</div><div class="s-desc">Démonstrations rigoureuses, raisonnement formel</div></div>
+      </div>
+      <div class="style-card" id="style-visual" onclick="selectStyle('visual')">
+        <input type="radio" name="s-style" value="visual">
+        <div><div class="s-ico">🗺</div></div>
+        <div><div class="s-name">Visuel / Schéma</div><div class="s-desc">Schémas ASCII, tableaux, traces d'exécution visuelles</div></div>
+      </div>
+    </div>
+
+    <div class="s-sec">6. Temps disponible</div>
+    <div class="fg">
+      <div class="pill-group">
+        <input type="radio" class="pill-in" id="sd1" name="s-duration" value="10min"><label class="pill-lbl" for="sd1">10 min</label>
+        <input type="radio" class="pill-in" id="sd2" name="s-duration" value="20min" checked><label class="pill-lbl" for="sd2">20 min</label>
+        <input type="radio" class="pill-in" id="sd3" name="s-duration" value="30min"><label class="pill-lbl" for="sd3">30 à 45 min</label>
+        <input type="radio" class="pill-in" id="sd4" name="s-duration" value="1h"><label class="pill-lbl" for="sd4">1 heure</label>
+      </div>
+    </div>
+
+    <div class="s-sec">7. Difficultés spécifiques rencontrées</div>
+    <div class="fg">
+      <div class="pill-group">
+        <input type="checkbox" class="pill-in" id="sdf1" name="s-diff" value="récursivité"><label class="pill-lbl" for="sdf1">Récursivité</label>
+        <input type="checkbox" class="pill-in" id="sdf2" name="s-diff" value="pointeurs / références"><label class="pill-lbl" for="sdf2">Pointeurs</label>
+        <input type="checkbox" class="pill-in" id="sdf3" name="s-diff" value="complexité algorithmique"><label class="pill-lbl" for="sdf3">Complexité</label>
+        <input type="checkbox" class="pill-in" id="sdf4" name="s-diff" value="POO — classes et héritage"><label class="pill-lbl" for="sdf4">POO</label>
+        <input type="checkbox" class="pill-in" id="sdf5" name="s-diff" value="SQL — jointures"><label class="pill-lbl" for="sdf5">SQL JOIN</label>
+        <input type="checkbox" class="pill-in" id="sdf6" name="s-diff" value="programmation dynamique"><label class="pill-lbl" for="sdf6">Prog. dynamique</label>
+        <input type="checkbox" class="pill-in" id="sdf7" name="s-diff" value="représentation binaire et flottants"><label class="pill-lbl" for="sdf7">Binaire / flottants</label>
+        <input type="checkbox" class="pill-in" id="sdf8" name="s-diff" value="graphes BFS/DFS"><label class="pill-lbl" for="sdf8">Graphes BFS/DFS</label>
+        <input type="checkbox" class="pill-in" id="sdf9" name="s-diff" value="arbres binaires de recherche"><label class="pill-lbl" for="sdf9">ABR</label>
+      </div>
+    </div>
+
+    <div class="s-sec">8. Ce sur quoi j'ai bloqué <span style="font-weight:400;color:var(--t3)">(optionnel)</span></div>
+    <div class="fg">
+      <textarea class="blocked-zone forge-textarea" id="s-blocked" rows="2" placeholder="Ex : j'ai raté la question 3 du dernier contrôle sur les arbres AVL, je ne comprends pas pourquoi mon code renvoie None..."></textarea>
+    </div>
+
+    <div class="s-sec">9. Précision libre <span style="font-weight:400;color:var(--t3)">(optionnel)</span></div>
+    <div class="fg">
+      <textarea class="forge-textarea" id="s-extra" rows="2" placeholder="Ex : je prépare le bac blanc de jeudi, j'utilise Python 3.11 sur ma machine..."></textarea>
+    </div>
+
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:1.2rem">
+      <button class="btn-forge" style="flex:1;min-width:180px" onclick="generateStudentPrompt()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        Générer mon prompt
+      </button>
+      <button class="btn-claude-ai" id="btn-claude-ai-s" onclick="openInClaude()" disabled>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="margin-right:.2rem"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M2 17l10 5 10-5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        Ouvrir dans Claude.ai
+      </button>
+    </div>
+  </div>
+</div><!-- /student-panel -->
+</div><!-- /left-col -->
+
+<!-- ══════════ PANNEAU PRÉVISUALISATION ══════════ -->
+<div class="preview-panel">
+
+  <div class="pv-topbar">
+    <div class="pv-ttl">Prompt généré</div>
+    <div class="tok-badge" id="tok">~ 0 tokens</div>
+    <div class="pv-actions">
+      <button class="btn-copy" onclick="copyPrompt()" id="btn-copy" disabled>
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M3 3V2a1 1 0 011-1h8a1 1 0 011 1v8a1 1 0 01-1 1h-1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Copier
+      </button>
+      <button class="btn-reset" onclick="resetForm()">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 8a6 6 0 106-6H6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M2 4v4h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Réinit.
+      </button>
+    </div>
+  </div>
+
+  <!-- Score qualité + avertissements -->
+  <div class="q-panel">
+    <div class="q-hdr">
+      <div class="q-lbl">Score de qualité</div>
+      <div class="q-pct" id="q-pct">0 / 100</div>
+    </div>
+    <div class="q-track"><div class="q-fill" id="q-fill"></div></div>
+    <div class="q-desc" id="q-desc">Remplissez les champs obligatoires pour obtenir une évaluation.</div>
+    <div class="q-warns" id="q-warns"></div>
+  </div>
+
+  <!-- Prompt -->
+  <div class="pv-wrap">
+    <div class="pv-empty" id="pv-empty">
+      <svg width="28" height="28" viewBox="0 0 30 30" fill="none" style="opacity:.3"><rect x="3" y="3" width="24" height="24" rx="4" stroke="#6c63ff" stroke-width="1.4"/><path d="M9 9h12M9 14h8M9 19h10" stroke="#6c63ff" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Le prompt structuré XML apparaîtra ici.<br>Remplissez le formulaire et cliquez sur « Générer ».
+    </div>
+    <pre id="pp" class="hidden"><code class="language-xml" id="pc"></code></pre>
+  </div>
+
+  <!-- API Claude in-situ -->
+  <div class="api-panel">
+    <div class="api-panel-hdr">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M2 17l10 5 10-5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <div class="api-panel-ttl">Test direct Claude IA</div>
+      <div style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--t3)" id="api-status">En attente d'un prompt</div>
+    </div>
+    <div class="api-key-wrap">
+      <input type="password" class="api-key-input" id="api-key" placeholder="Clé API Anthropic (sk-ant-...)" autocomplete="off" title="Votre clé API Anthropic — stockée uniquement dans cette page, jamais envoyée ailleurs.">
+      <button class="btn-api-run" id="btn-api-run" onclick="runClaudeAPI()" disabled>
+        <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Tester
+      </button>
+    </div>
+    <div class="api-response" id="api-response" style="color:var(--t3);font-family:'JetBrains Mono',monospace;font-size:.7rem;font-style:italic">Entrez votre clé API et générez un prompt pour tester directement.</div>
+    <div class="api-notice">Clé stockée localement (sessionStorage) — non transmise à des tiers. Utilise claude-sonnet-4-20250514. Streaming activé.</div>
+  </div>
+
+  <!-- Guide -->
+  <div class="guide">
+    <div class="guide-ttl">Guide d'utilisation</div>
+    <div class="guide-body">Copiez le prompt généré dans Claude.ai ou utilisez le test direct (clé API requise). Les balises XML structurent la requête selon les meilleures pratiques Anthropic officielles. Partagez un profil complet via le bouton « Partager » (URL encodée).</div>
+  </div>
+
+</div><!-- /preview-panel -->
+</div><!-- /forge-wrapper -->
+
+<!-- MODAL SAUVEGARDE -->
+<div class="modal-overlay" id="save-modal" onclick="if(event.target===this)closeModal('save-modal')">
+  <div class="modal-box">
+    <div class="modal-title">💾 Sauvegarder le profil</div>
+    <span class="modal-label">Nom du profil :</span>
+    <input class="modal-input" id="modal-name-input" type="text" placeholder="Ex : Terminale T2 SQL — Évaluation" maxlength="80" style="margin-bottom:1rem">
+    <div class="modal-actions">
+      <button class="modal-btn-cancel" onclick="closeModal('save-modal')">Annuler</button>
+      <button class="modal-btn-confirm" onclick="confirmSave()">Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL BIBLIOTHÈQUE -->
+<div class="modal-overlay" id="lib-modal" onclick="if(event.target===this)closeModal('lib-modal')">
+  <div class="modal-box" style="width:min(500px,96vw)">
+    <div class="modal-title">📚 Bibliothèque de profils</div>
+    <div class="modal-slots-scroll" id="lib-list">
+      <div class="lib-empty">Aucun profil sauvegardé.</div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn-cancel" onclick="closeModal('lib-modal')">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-msg" id="toast"></div>
+<footer>Lycée Antoine Watteau &mdash; Valenciennes &nbsp;|&nbsp; <span>DarkSATHI Li</span> &nbsp;|&nbsp; NSI Prompt Forge <span class="vv">v5.0</span> &nbsp;|&nbsp; Baccalauréat 2026</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* ══════════════════════════════════════════════════════
+   NSI PROMPT FORGE v5 — JavaScript
+   DarkSATHI Li — Lycée Antoine Watteau
+   ══════════════════════════════════════════════════════ */
+
+/* ══ DONNÉES PROGRAMME ══ */
+const NOTIONS = {
+  P1:["Représentation des entiers (binaire, hexadécimal, complément à deux)","Représentation des réels (virgule flottante IEEE 754)","Représentation des caractères (ASCII, Unicode, UTF-8)","Booléens et opérateurs logiques","Valeurs de base : entiers, flottants, chaînes, booléens"],
+  P2:["p-uplets et tableaux","Dictionnaires (clés / valeurs)","Tableaux multidimensionnels","Construction et manipulation de structures composées"],
+  P3:["Tables de données (format CSV)","Indexation de tables","Recherche et sélection dans une table","Tri de tables","Fusion de tables"],
+  P4:["Modèle client-serveur","Requêtes HTTP (GET, POST)","Pages Web — HTML, CSS","Formulaires et interactions utilisateur","Cookies et sécurité Web"],
+  P5:["Modèle de von Neumann — processeur, mémoire, bus","Langage machine et assembleur","Systèmes d'exploitation — gestion des processus et de la mémoire","Réseaux — protocoles IP, TCP, routage"],
+  P6:["Variables, expressions et instructions","Fonctions et paramètres","Portée des variables","Bibliothèques et modules","Tests et mise au point","Paradigmes (impératif, fonctionnel, objet)"],
+  P7:["Complexité temporelle O(n), O(n²), O(log n)","Tris — insertion, sélection, fusion","Recherche dichotomique","Algorithmes sur les tableaux et chaînes","Algorithmes gloutons"],
+  T1:["Listes chaînées","Piles et files","Arbres binaires — représentation et parcours (préfixe, infixe, suffixe)","Arbres binaires de recherche (ABR)","Graphes — représentation (matrice / listes d'adjacence)","Parcours de graphes (BFS, DFS)"],
+  T2:["Modèle relationnel — relations, attributs, domaines","Langage SQL — SELECT, FROM, WHERE, JOIN, GROUP BY","Contraintes d'intégrité — clé primaire, clé étrangère","Gestion de bases de données avec SQLite","Requêtes imbriquées et agrégats"],
+  T3:["Systèmes sur puce (SoC)","Gestion des processus et ordonnancement","Protocoles de routage — RIP, OSPF","Sécurité des communications — chiffrement, HTTPS","Composants réseau — switch, routeur, pare-feu"],
+  T4:["Récursivité — terminaison, correction, complexité","Programmation orientée objet — classes, héritage, polymorphisme","Calculabilité — problèmes indécidables, machine de Turing","Paradigmes fonctionnels — fonctions d'ordre supérieur, lambda"],
+  T5:["Algorithme des k plus proches voisins (k-NN)","Recherche textuelle (Boyer-Moore, Rabin-Karp)","Programmation dynamique","Diviser pour régner","Algorithmes sur les graphes — Dijkstra, Bellman-Ford, A*","Heuristiques — colonies de fourmis, algorithmes génétiques"]
+};
+
+/* ══ TEMPLATES OUTPUT_FORMAT DIFFÉRENCIÉS PAR SOUS-TYPE × BLOOM ══ */
+const SUBTYPES = {
+  tp:['TP guidé pas à pas','TP semi-guidé','TP en autonomie complète','TP avec mini-projet'],
+  activite:['Activité de découverte','Activité de problème ouvert','Activité de manipulation','Jeu sérieux / simulation','Débat ou argumentation'],
+  cours:['Cours magistral structuré','Cours dialogué avec exercices intégrés','Cours avec activités intercalées','Polycopié de référence'],
+  evaluation:['Contrôle formatif (devoir surveillé)','Devoir maison','QCM avec justifications','Évaluation par compétences','Oral de NSI'],
+  bac_ecrit:['Sujet complet (3h30)','Exercice indépendant (1h)','Sujet blanc similaire aux annales','Sujet de type zéro Eduscol'],
+  bac_pratique:['Exercice 1 — code à compléter','Exercice 2 — programmation libre','Sujet complet EP2 (2 exercices)','Banque de sujets EP2'],
+  correction:['Corrigé enseignant détaillé','Correction élève type (exemplaire)','Barème avec points de compétences','Grille d\'évaluation critériée'],
+  support:['Fiche de révision synthétique','Carte mentale des notions','Résumé de cours une page','Glossaire illustré']
+};
+
+/* Templates différenciés par (type, sous-type, bloom) */
+function getOutputFormat(rtype, rsub, bloomLevel) {
+  const bl = parseInt(bloomLevel) || 3;
+  const isLow  = bl <= 2;
+  const isMid  = bl === 3 || bl === 4;
+  const isHigh = bl >= 5;
+
+  const depthTag = isLow
+    ? 'Niveau : mémorisation/compréhension. Privilégie les définitions encadrées, les exemples commentés pas à pas, les QCM avec justifications. Evite les questions ouvertes complexes.'
+    : isMid
+    ? 'Niveau : application/analyse. Structure des exercices progressifs avec montée en difficulté. Inclure des questions de justification et de trace d\'exécution.'
+    : 'Niveau : évaluation/création. Propose des problèmes ouverts, des situations nouvelles nécessitant combinaison de connaissances. Questions de type « concevoir », « justifier », « comparer ».';
+
+  const templates = {
+    tp: {
+      'TP guidé pas à pas': `Produis directement un TP guidé complet : (1) En-tête titre/niveau/durée/matériel, (2) Mise en situation contextualisée avec objectifs visibles, (3) Questions numérotées avec espaces de réponse et blocs code Python, (4) Chaque question précédée de l'instruction ou du code à compléter. ${depthTag} Corrigé en annexe séparée si demandé. Note pédagogique finale encadrée.`,
+      'TP semi-guidé': `Produis un TP semi-guidé : contexte et objectifs, puis questions groupées par partie avec moins de guidage que le TP pas à pas. ${depthTag} Laisser de l'autonomie dans la démarche. Indices disponibles en note de bas de page.`,
+      'TP en autonomie complète': `Produis un TP en autonomie : énoncé du problème, spécifications fonctionnelles, contraintes techniques, jeux de tests attendus. Aucun code fourni, aucun guidage pas à pas. ${depthTag} Format de rendu attendu précisé.`,
+      'TP avec mini-projet': `Produis un TP-projet : présentation du projet global, découpage en étapes avec jalons, spécifications par étape. ${depthTag} Critères d'évaluation explicites. Grille de rendu finale.`,
+      'default': `Produis directement le TP complet. ${depthTag} Structure : en-tête, mise en situation, questions progressives, blocs code. Note pédagogique en fin.`
+    },
+    evaluation: {
+      'Contrôle formatif (devoir surveillé)': `Produis un sujet de contrôle formatif : (1) En-tête officiel établissement/durée/documents autorisés, (2) Barème global visible en en-tête, (3) Exercices indépendants numérotés, sous-questions (ex. 2.b), (4) Espaces de réponse calibrés. ${depthTag} Chaque exercice débute par une question accessible à tous.`,
+      'QCM avec justifications': `Produis un QCM avec justifications : 10 à 15 questions à choix unique ou multiple, une seule bonne réponse clairement définie. ${depthTag} Chaque proposition comporte un intrus plausible. Grille de correction avec justification de chaque réponse en annexe.`,
+      'Évaluation par compétences': `Produis une évaluation par compétences : chaque tâche est étiquetée avec la compétence NSI visée (Analyser, Coder, Tester...). ${depthTag} Grille AGATHE avec niveaux insuffisant/fragile/satisfaisant/très bien. Pas de barème numérique, uniquement des indicateurs de réussite qualitatifs.`,
+      'default': `Produis directement le sujet d'évaluation. ${depthTag} En-tête officiel, barème, exercices numérotés, espaces pour réponses. Corrigé séparé si demandé.`
+    },
+    bac_ecrit: {
+      'Sujet complet (3h30)': `Produis un sujet EP1 complet type baccalauréat 3h30 : en-tête normalisé (Bac général NSI, 3h30, tous documents autorisés), trois exercices indépendants (8-10 / 6-8 / 6-8 pts), contexte réel ancré dans l'actualité numérique, questions numérotées partie/sous-partie (ex. 2.b.iii). ${depthTag} Barème indicatif par exercice. Aucun préambule.`,
+      'Exercice indépendant (1h)': `Produis un exercice EP1 indépendant sur 1 heure : contexte précis, 4 à 6 questions progressives numérotées 1.a, 1.b... ${depthTag} Barème sur 10 ou 12 points. Calibré annales officielles.`,
+      'Sujet blanc similaire aux annales': `Produis un sujet blanc fidèle au format des annales NSI officielles. Respecte la structure exacte des sujets publiés : trois exercices, numérotation conforme, longueur et profondeur calibrées. ${depthTag}`,
+      'default': `Produis un sujet type EP1 baccalauréat NSI. ${depthTag} Structure normalisée, numérotation officielle, barème indicatif.`
+    },
+    bac_pratique: {
+      'Exercice 1 — code à compléter': `Produis l'Exercice 1 EP2 nouvelle forme 2026 : fichier Python avec en-tête docstring (auteur, date, thème), fonctions à implémenter avec spécifications complètes (docstring + type hints), assertions de test intégrées. ${depthTag} Le code fourni doit être syntaxiquement valide et les trous clairement balisés (# A COMPLETER).`,
+      'Exercice 2 — programmation libre': `Produis l'Exercice 2 EP2 : énoncé précis du problème algorithmique, exemples d'entrée/sortie, contraintes de performance si pertinent, jeux de tests obligatoires (au moins 3 cas dont cas limites). ${depthTag} Spécification de la signature de la fonction attendue.`,
+      'Sujet complet EP2 (2 exercices)': `Produis un sujet EP2 complet (1 heure) : Exercice 1 code à compléter + Exercice 2 programmation libre. ${depthTag} Format .py commenté, en-tête établissement, instructions pour le candidat.`,
+      'default': `Produis un sujet EP2 nouvelle forme 2026. ${depthTag} Format Python valide, assertions, spécifications.`
+    },
+    correction: {
+      'Corrigé enseignant détaillé': `Produis le corrigé enseignant : (1) Reprise numérotée de chaque question avec référence, (2) Solution complète avec justifications pédagogiques détaillées, (3) Points de vigilance et erreurs fréquentes encadrés, (4) Barème avec critères et points partiels. ${depthTag} Signaler les variantes acceptables.`,
+      'Barème avec points de compétences': `Produis un barème compétences : grille AGATHE (Analyser / Généraliser / Adapter / Traduire / Hybrider / Évaluer) avec 4 niveaux (insuffisant / fragile / satisfaisant / très bien) par item. ${depthTag} Indicateurs de réussite observables et non ambigus.`,
+      'default': `Produis le corrigé complet. ${depthTag} Solution détaillée, justifications, barème, erreurs fréquentes.`
+    },
+    support: {
+      'Fiche de révision synthétique': `Produis une fiche de révision synthétique : (1) Titre + référence programme, (2) Notions essentielles avec définitions concises en gras, (3) Exemples minimaux commentés (5 lignes max), (4) Points mémo encadrés, (5) Erreurs classiques, (6) Mini-exercices auto-évaluation avec réponses cachées. ${depthTag} Format compact, maximum 2 pages.`,
+      'Carte mentale des notions': `Produis une carte mentale textuelle hiérarchique (format Markdown indenté) : concept central, branches principales (notions), sous-branches (détails, exemples, liens). ${depthTag} Indiquer les connexions inter-notions.`,
+      'Glossaire illustré': `Produis un glossaire illustré : chaque terme en gras, définition concise, exemple minimal en Python ou pseudo-code, lien avec le programme NSI. Ordre alphabétique. ${depthTag}`,
+      'default': `Produis le support de cours. ${depthTag} Titre, définitions, exemples, points mémo, auto-évaluation.`
+    },
+    activite: {
+      'Activité de découverte': `Produis une activité de découverte : mise en situation problématisée sans définitions préalables, questions inductives guidant vers la notion, synthèse institutionnelle à construire collectivement. ${depthTag}`,
+      'Activité de problème ouvert': `Produis une activité problème ouvert : énoncé d'une situation complexe sans démarche imposée, questions de plus en plus ouvertes, plusieurs stratégies valides possibles. ${depthTag}`,
+      'default': `Produis l'activité pédagogique. ${depthTag} Contexte motivant, phases numérotées, questions de synthèse.`
+    },
+    cours: {
+      'Cours magistral structuré': `Produis un cours structuré : (1) En-tête titre/niveau/prérequis, (2) Introduction et problématique motivante, (3) Corps en parties numérotées avec définitions encadrées et exemples commentés, (4) Synthèse et points mémo, (5) Exercices d'entraînement. ${depthTag} Remarques hors-programme en note encadrée.`,
+      'Cours dialogué avec exercices intégrés': `Produis un cours dialogué : alterner exposé et questions adressées à la classe (indiquées entre crochets [Question à poser]), exercices courts intégrés au fil du cours. ${depthTag}`,
+      'default': `Produis le cours structuré. ${depthTag} Introduction, développement, synthèse, exercices.`
+    }
+  };
+
+  const typeMap = templates[rtype];
+  if (!typeMap) {
+    return `Produis directement la ressource complète, sans préambule ni méta-commentaire. ${depthTag} La ressource doit être immédiatement utilisable en classe sans modification majeure. Consigne les choix didactiques dans une « Note pédagogique » finale encadrée.`;
+  }
+  return typeMap[rsub] || typeMap['default'] || `Produis directement la ressource. ${depthTag}`;
+}
+
+const BLOOM = ['','Mémoriser','Comprendre','Appliquer','Analyser','Évaluer','Créer'];
+const ROLE_MAP = {
+  professeur_nsi_senior:'professeur de NSI expérimenté en lycée général',
+  formateur_nsi:'formateur académique spécialiste de la spécialité NSI',
+  ingenieur_pedagogique:'ingénieur pédagogique expert en numérique éducatif',
+  inspecteur_nsi:'inspecteur pédagogique de la spécialité NSI',
+  concepteur_bac:"concepteur de sujets d'épreuves du baccalauréat NSI",
+  didacticien:'didacticien de l\'informatique et des sciences du numérique'
+};
+
+/* ══ HELPERS ══ */
+const g    = id => document.getElementById(id)?.value?.trim() || '';
+const gb   = id => document.getElementById(id)?.checked || false;
+const gSel = id => Array.from(document.getElementById(id)?.selectedOptions || []).map(o => o.value).filter(Boolean);
+const gCk  = name => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(i => i.value);
+const safeGet = id => document.getElementById(id);
+
+/* ══ BLOOM ══ */
+function updateBloom() {
+  const v = safeGet('bloom-level')?.value || 3;
+  const disp = safeGet('bloom-disp');
+  if (disp) disp.textContent = `Niveau ${v} — ${BLOOM[v]}`;
+}
+
+/* ══ NOTIONS (multi-thèmes) ══ */
+function updateNotions() {
+  const themes = gSel('theme-main');
+  const s = safeGet('notion-select');
+  if (!s) return;
+  s.innerHTML = '';
+  if (!themes.length) { s.innerHTML = '<option disabled>— Choisir un thème d\'abord —</option>'; return; }
+  themes.forEach(t => {
+    if (!NOTIONS[t]) return;
+    const grp = document.createElement('optgroup');
+    const opt = document.querySelector(`#theme-main option[value="${t}"]`);
+    grp.label = opt ? opt.text : t;
+    NOTIONS[t].forEach(n => { const o = document.createElement('option'); o.value = n; o.textContent = n; grp.appendChild(o); });
+    s.appendChild(grp);
+  });
+}
+
+/* Notions élève */
+function updateStudentNotions() {
+  const theme = g('s-theme');
+  const s = safeGet('s-notion');
+  if (!s) return;
+  s.innerHTML = '';
+  if (!theme || !NOTIONS[theme]) { s.innerHTML = '<option disabled>— Choisir le chapitre d\'abord —</option>'; return; }
+  NOTIONS[theme].forEach(n => { const o = document.createElement('option'); o.value = n; o.textContent = n; s.appendChild(o); });
+}
+safeGet('s-theme')?.addEventListener('change', updateStudentNotions);
+
+/* ══ SOUS-TYPES ══ */
+function updateResourceSub() {
+  const t = g('resource-type'), w = safeGet('res-sub-wrap'), c = safeGet('res-sub-cont');
+  if (safeGet('bac-info')) safeGet('bac-info').style.display = (t === 'bac_pratique') ? 'block' : 'none';
+  if (!SUBTYPES[t]) { if (w) w.style.display = 'none'; return; }
+  if (c) {
+    c.innerHTML = '';
+    const lbl = document.createElement('label'); lbl.className = 'lbl'; lbl.textContent = 'Sous-type précis';
+    const sel = document.createElement('select'); sel.className = 'forge-select'; sel.id = 'res-subtype';
+    const defO = document.createElement('option'); defO.value = ''; defO.textContent = '— Sous-type —'; sel.appendChild(defO);
+    SUBTYPES[t].forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sel.appendChild(o); });
+    c.appendChild(lbl); c.appendChild(sel);
+  }
+  if (w) w.style.display = 'block';
+}
+
+/* ══ VALIDATION SÉMANTIQUE (avertissements) ══ */
+const NIVEAU_THEME = {
+  premiere: ['P1','P2','P3','P4','P5','P6','P7'],
+  terminale: ['T1','T2','T3','T4','T5']
+};
+
+function getSemanticWarnings() {
+  const warns = [];
+  const level = g('level');
+  const themes = gSel('theme-main');
+  const rtype = g('resource-type');
+  const dur = g('duration');
+
+  // Incohérence niveau / thèmes
+  if (level === 'premiere' && themes.some(t => t.startsWith('T')))
+    warns.push('Thèmes Terminale sélectionnés pour un niveau Première.');
+  if (level === 'terminale' && themes.some(t => t.startsWith('P')))
+    warns.push('Thèmes Première sélectionnés pour un niveau Terminale.');
+
+  // Durée incompatible avec type
+  const shortDurs = ['20min','30min'];
+  const longTypes = ['bac_ecrit','cours'];
+  if (shortDurs.includes(dur) && longTypes.includes(rtype))
+    warns.push(`Durée "${dur}" trop courte pour un "${rtype}".`);
+  if (dur === '3h' && rtype === 'support')
+    warns.push('3 heures pour une fiche de révision semble excessif.');
+
+  // Bloom élevé sans objectif précis
+  const bloom = parseInt(safeGet('bloom-level')?.value || 3);
+  const obj = g('main-objective');
+  if (bloom >= 5 && obj.length < 30)
+    warns.push('Bloom niveau 5-6 (Évaluer/Créer) — précisez davantage l\'objectif.');
+
+  return warns;
+}
+
+function checkLevelNotionCoherence() { /* déclenche le refresh du score */ computeScore(); }
+function checkDurationCoherence() { computeScore(); }
+
+/* ══ STYLE ÉLÈVE ══ */
+let _selectedStyle = '';
+function selectStyle(s) {
+  _selectedStyle = s;
+  document.querySelectorAll('.style-card').forEach(c => c.classList.remove('sel'));
+  const card = safeGet('style-' + s);
+  if (card) card.classList.add('sel');
+}
+
+/* ══ CHIPS EDUSCOL ══ */
+function toggleChip(el) { el.classList.toggle('on'); }
+function getChips() { return Array.from(document.querySelectorAll('#edu-chips .on')).map(c => c.dataset.val); }
+
+/* ══ UPLOAD FICHIERS ══ */
+const files = [];
+const uz = safeGet('upzone');
+uz?.addEventListener('dragover', e => { e.preventDefault(); uz.classList.add('over'); });
+uz?.addEventListener('dragleave', () => uz.classList.remove('over'));
+uz?.addEventListener('drop', e => { e.preventDefault(); uz.classList.remove('over'); handleFiles(e.dataTransfer.files); });
+safeGet('file-input')?.addEventListener('change', function () { handleFiles(this.files); this.value = ''; });
+
+function handleFiles(fs) {
+  Array.from(fs).forEach(f => {
+    if (f.size > 5 * 1024 * 1024) { showToast('Fichier trop volumineux (> 5 Mo) : ' + f.name, true); return; }
+    if (files.find(u => u.name === f.name)) return;
+    const r = new FileReader();
+    r.onload = e => { files.push({ name: f.name, size: f.size, type: f.type, content: e.target.result }); renderFiles(); checkPdfWarn(); };
+    f.type === 'application/pdf' ? r.readAsDataURL(f) : r.readAsText(f, 'UTF-8');
+  });
+}
+function renderFiles() {
+  const l = safeGet('flist'); if (!l) return; l.innerHTML = '';
+  files.forEach((f, i) => {
+    const d = document.createElement('div'); d.className = 'fitem';
+    const ico = f.type === 'application/pdf' ? '📄' : '📝';
+    d.innerHTML = `<span class="fname">${ico} ${f.name}</span><span class="fsize">${(f.size / 1024).toFixed(1)} Ko</span><button class="frem" onclick="removeFile(${i})" title="Supprimer">&#10005;</button>`;
+    l.appendChild(d);
+  });
+}
+function removeFile(i) { files.splice(i, 1); renderFiles(); checkPdfWarn(); }
+function checkPdfWarn() {
+  const w = safeGet('pdf-warn');
+  if (w) w.style.display = files.some(f => f.type === 'application/pdf') ? 'block' : 'none';
+}
+
+/* ══ SCORE QUALITÉ (v5 — pondération révisée + pénalités) ══
+   Rôle +8 · Niveau +10 · Thème +10 · Notions +7 · Type +10
+   Objectif (longueur calibrée) +12 · Bloom +4 · Compétences +5
+   AGATHE +7 · Spirale +5 · Chips Eduscol +5 · Fichiers +4
+   Exemple few-shot (qualité minimum) +8 · Prérequis +3 · Tone +2
+   Pénalités : incohérences sémantiques -5 chacune
+*/
+function computeScore() {
+  let s = 0;
+  if (g('role-profile'))              s += 8;
+  if (g('level'))                     s += 10;
+  if (gSel('theme-main').length > 0)  s += 10;
+  if (gSel('notion-select').length > 0) s += 7;
+  if (g('resource-type'))             s += 10;
+  const obj = g('main-objective');
+  if (obj.length > 20)  s += 6;
+  if (obj.length > 60)  s += 6;  // bonus qualité réelle
+  const bv = parseInt(safeGet('bloom-level')?.value || 3);
+  if (bv > 1)                         s += 4;
+  if (gCk('comp').length > 0)         s += 5;
+  if (gCk('agathe').length > 0)       s += 7;
+  if (g('spiral'))                    s += 5;
+  if (getChips().length > 0)          s += 5;
+  if (files.length > 0)               s += 4;
+  if (g('ex-pos').length > 40)        s += 8;  // seuil plus exigeant
+  if (g('prerequisites').length > 10) s += 3;
+  if (g('tone'))                      s += 2;
+
+  // Pénalités sémantiques
+  const warns = getSemanticWarnings();
+  s -= warns.length * 5;
+
+  s = Math.max(0, Math.min(s, 100));
+  updateQuality(s, warns);
+  return s;
+}
+
+function updateQuality(score, warns = []) {
+  const fill = safeGet('q-fill'), pct = safeGet('q-pct'), desc = safeGet('q-desc'), warnsEl = safeGet('q-warns');
+  if (fill) fill.style.width = score + '%';
+  if (pct)  pct.textContent  = score + ' / 100';
+  const msgs = [
+    'Prompt insuffisant — renseignez au minimum : rôle, niveau, thème, type et objectif.',
+    'Prompt minimal — ajoutez des notions précises, compétences et AGATHE.',
+    'Prompt satisfaisant — enrichissez avec références Eduscol et exemples.',
+    'Prompt de bonne qualité — ajoutez un exemple few-shot pour optimiser.',
+    'Prompt optimal — toutes les dimensions pédagogiques sont renseignées.'
+  ];
+  if (desc) desc.textContent = msgs[score < 25 ? 0 : score < 50 ? 1 : score < 70 ? 2 : score < 88 ? 3 : 4];
+  if (warnsEl) {
+    warnsEl.innerHTML = warns.map(w => `<div class="q-warn-item">! ${w}</div>`).join('');
+  }
+}
+
+/* ══ ESTIMATION TOKENS ══ */
+function estimateTokens(text) { return Math.round(text.length / 3.6); }
+
+/* ══════════════════════════════════════════
+   GÉNÉRATION PROMPT ENSEIGNANT v5
+   ══════════════════════════════════════════ */
+function generatePrompt() {
+  const score = computeScore();
+  if (score < 20) { showToast('Remplissez au minimum le rôle, le niveau, le thème, le type et l\'objectif.', true); return; }
+
+  const rv = g('role-profile');
+  const rt = rv === 'custom' ? g('role-custom') : (ROLE_MAP[rv] || rv);
+  const lv = g('level');
+  const ll = { premiere: 'Première NSI', terminale: 'Terminale NSI', premiere_terminale: 'Première et Terminale NSI' }[lv] || lv;
+
+  const themes = gSel('theme-main');
+  const themeLabels = themes.map(t => { const opt = document.querySelector(`#theme-main option[value="${t}"]`); return opt ? opt.text : t; });
+  const notions = gSel('notion-select');
+  const np = g('notion-prec');
+  const sp = g('spiral');
+  const sl = { decouverte: 'première découverte de la notion', approfondissement: 'approfondissement d\'une notion déjà abordée', consolidation: 'consolidation et systématisation', transfert: 'transfert vers un nouveau contexte applicatif', synthese: 'synthèse et mise en liens inter-notions', remediation: 'remédiation ciblée sur une difficulté identifiée' }[sp] || sp;
+
+  const rtype = g('resource-type');
+  const rtl = { tp: 'Travaux pratiques (TP)', activite: 'Activité pédagogique', cours: 'Cours structuré', evaluation: 'Évaluation', bac_ecrit: 'Sujet d\'épreuve écrite du baccalauréat', bac_pratique: 'Sujet d\'épreuve pratique du baccalauréat (nouvelle forme 2026)', correction: 'Corrigé et barème', support: 'Support de cours / fiche de révision' }[rtype] || rtype;
+  const rsub = g('res-subtype');
+  const dur = g('duration');
+  const dl = { '20min': '20 minutes', '30min': '30 minutes', '45min': '45 minutes', '1h': '1 heure', '1h30': '1 heure 30', '2h': '2 heures', '3h': '3 heures et plus', pluriseances: 'plusieurs séances' }[dur] || dur;
+  const wm = g('work-mode');
+  const wml = { individuel: 'individuel', binome: 'en binôme', groupe: 'en groupe (3-4 élèves)', classe_entiere: 'classe entière (cours dialogué)', mixte: 'mixte' }[wm] || wm;
+  const obj = g('main-objective');
+  const bv = safeGet('bloom-level')?.value || 3;
+  const bl = BLOOM[bv];
+  const comps = gCk('comp');
+  const agathe = gCk('agathe');
+  const prereqs = g('prerequisites');
+  const cs = g('class-size');
+  const cp = g('class-profile');
+  const cc = g('class-context');
+  const langs = gCk('lang');
+  const of = g('output-format');
+  const ofl = { markdown: 'document Markdown structuré', html_complet: 'page HTML autonome et complète', latex: 'document LaTeX', pdf_ready: 'format prêt à imprimer (PDF-friendly)', numerique_interactif: 'ressource numérique interactive', libre: 'format libre adapté à la ressource' }[of] || of;
+  const tone = g('tone');
+  const tonel = { academique: 'académique et rigoureux', pedagogique: 'pédagogique et bienveillant', concis: 'concis et direct (adapté au format examen)', progressif: 'progressif et guidé', ouvert: 'ouvert et interrogatif (approche par la découverte)' }[tone] || tone;
+  const chips = getChips();
+  const docr = g('doc-refs');
+  const expos = g('ex-pos');
+  const exneg = g('ex-neg');
+  const negc = g('neg-constr');
+  const extra = g('extra');
+  const fmtc = g('fmt-constr');
+  const tCorr = gb('t-corr'), tBar = gb('t-bar'), tDiff = gb('t-diff'), tEbep = gb('t-ebep'), tNum = gb('t-num');
+
+  const L = [];
+
+  /* ROLE */
+  L.push('<role>');
+  L.push(`Tu es ${rt}, reconnu pour la rigueur scientifique de tes productions pédagogiques et la précision de ton ancrage dans le programme officiel de la spécialité Numérique et Sciences Informatiques (NSI). Tu maîtrises les exigences du baccalauréat général 2026, les grilles d'évaluation officielles (AGATHE, compétences NSI) et les attendus de l'enseignement NSI en lycée général. Tu produis des ressources directement utilisables en classe, sans modification majeure de la part de l'enseignant.`);
+  L.push('</role>');
+  L.push('');
+
+  /* CONTEXT */
+  L.push('<context>');
+  let ctx = `La ressource est destinée à des élèves de ${ll}.`;
+  if (cs) ctx += ` La classe compte ${({ moins_15: 'moins de 15', '15_20': '15 à 20', plus_20: 'plus de 20' }[cs] || cs)} élèves.`;
+  if (cp) { const pm = { heterogene: 'Le groupe est hétérogène, avec des niveaux de maîtrise algorithmique variés.', bonne_base: 'Les élèves ont une bonne maîtrise algorithmique générale.', difficultes: 'La classe présente des difficultés récurrentes en programmation.', motive: 'Le groupe est particulièrement motivé et autonome.', premiere_annee: 'Les élèves sont en première année de NSI, débutants en programmation.' }; ctx += ' ' + (pm[cp] || ''); }
+  if (cc) ctx += ' ' + cc;
+  L.push(ctx);
+  L.push('</context>');
+  L.push('');
+
+  /* PROGRAMME_NSI */
+  L.push('<programme_nsi>');
+  if (themeLabels.length === 1) {
+    L.push(`Thème du programme officiel (BO NSI) : ${themeLabels[0]}`);
+  } else if (themeLabels.length > 1) {
+    L.push('Thèmes du programme officiel (BO NSI) :');
+    themeLabels.forEach(tl => L.push(`  - ${tl}`));
+  }
+  if (notions.length > 0) { L.push('Notions et contenus ciblés :'); notions.forEach(n => L.push(`  - ${n}`)); }
+  if (sl) L.push(`Position dans la progression spiralaire : ${sl}.`);
+  if (np) L.push(`Précisions didactiques : ${np}`);
+  L.push('</programme_nsi>');
+  L.push('');
+
+  /* INSTRUCTIONS */
+  L.push('<instructions>');
+  L.push(`Produis une ressource de type « ${rtl}${rsub ? ' — ' + rsub : ''} » destinée à des élèves de ${ll}.`);
+  if (dl) L.push(`Durée prévue : ${dl}.`);
+  if (wml) L.push(`Modalité de travail : ${wml}.`);
+  L.push('');
+  L.push('Objectif pédagogique principal :');
+  L.push(obj);
+  L.push('');
+  L.push(`Niveau taxonomique visé (taxonomie de Bloom) : niveau ${bv}/6 — ${bl}.`);
+  if (comps.length > 0) { L.push('Compétences du programme NSI à mobiliser :'); comps.forEach(c => L.push(`  - ${c}`)); }
+  if (agathe.length > 0) { L.push('Capacités du référentiel AGATHE évaluées :'); agathe.forEach(a => L.push(`  - ${a}`)); }
+  if (prereqs) { L.push(''); L.push('Prérequis attendus des élèves :'); L.push(prereqs); }
+  L.push('</instructions>');
+  L.push('');
+
+  /* CONSTRAINTS */
+  L.push('<constraints>');
+  if (langs.length > 0) L.push(`Langages de programmation autorisés : ${langs.join(', ')}.`);
+  if (ofl) L.push(`Format de la ressource produite : ${ofl}.`);
+  if (tonel) L.push(`Ton et style rédactionnel : ${tonel}.`);
+
+  const opts = [];
+  if (tCorr) opts.push('inclure un corrigé détaillé avec justifications pédagogiques');
+  if (tBar)  opts.push('inclure un barème de notation précis avec points partiels');
+  if (tDiff) opts.push('prévoir une différenciation pédagogique explicite : aide guidée pour les élèves en difficulté, défi supplémentaire pour les plus avancés — les deux niveaux clairement balisés dans le document');
+  if (tEbep) opts.push('adapter la ressource pour des élèves à besoins éducatifs particuliers (EBEP) : formulations simplifiées, espaces de réponse élargis, consignes en pas à pas');
+  if (tNum)  opts.push('numéroter les questions selon la convention EP1 baccalauréat (partie / sous-partie / item, ex. 2.b.iii)');
+  if (opts.length > 0) { L.push('Options de structuration requises :'); opts.forEach(o => L.push(`  - ${o}`)); }
+
+  if (fmtc) L.push(`Contraintes de format spécifiques : ${fmtc}`);
+  L.push('');
+  L.push("Contrainte absolue : la ressource doit être scrupuleusement conforme au programme officiel de la spécialité NSI (arrêté du 17 juillet 2019 et modifications ultérieures). Aucune notion hors programme ne doit être introduite sans signalement explicite dans une « Note pédagogique » encadrée en fin de document.");
+  if (negc) { L.push(''); L.push('Interdictions explicites :'); L.push(negc); }
+  L.push('</constraints>');
+  L.push('');
+
+  /* REFERENCES */
+  if (chips.length > 0 || docr || files.length > 0) {
+    L.push('<references>');
+    if (chips.length > 0) { L.push('Ressources officielles Eduscol à mobiliser comme références :'); chips.forEach(r => L.push(`  - ${r}`)); }
+    if (docr) { L.push(''); L.push('Références documentaires précises :'); L.push(docr); }
+    if (files.length > 0) {
+      L.push(''); L.push(`Documents joints (${files.length} fichier${files.length > 1 ? 's' : ''}) :`);
+      files.forEach(f => {
+        L.push(`  - ${f.name} (${(f.size / 1024).toFixed(1)} Ko)`);
+        if (typeof f.content === 'string' && !f.content.startsWith('data:'))
+          L.push(`    Extrait : ${f.content.slice(0, 600).trim()}${f.content.length > 600 ? '...' : ''}`);
+        else if (f.type === 'application/pdf')
+          L.push(`    [PDF — voir les références documentaires ci-dessus.]`);
+      });
+    }
+    L.push('</references>');
+    L.push('');
+  }
+
+  /* EXAMPLES (few-shot) */
+  if (expos || exneg) {
+    L.push('<examples>');
+    if (expos) { L.push('<example type="modele_a_suivre">'); L.push(expos); L.push('</example>'); }
+    if (exneg) { L.push('<example type="a_eviter">'); L.push(exneg); L.push('</example>'); }
+    L.push('</examples>');
+    L.push('');
+  }
+
+  /* ADDITIONAL_INSTRUCTIONS */
+  if (extra) { L.push('<additional_instructions>'); L.push(extra); L.push('</additional_instructions>'); L.push(''); }
+
+  /* THINKING_PROCESS (chain-of-thought conditionnel) */
+  const cotTypes = ['bac_ecrit', 'bac_pratique', 'correction', 'evaluation'];
+  if (cotTypes.includes(rtype) || parseInt(bv) >= 5) {
+    L.push('<thinking_process>');
+    L.push('Avant de produire la ressource, raisonne étape par étape en silence (ne pas inclure ce raisonnement dans ta réponse) :');
+    L.push('1. Vérifie que chaque notion mobilisée figure au programme NSI BO 2019 pour le niveau indiqué.');
+    L.push('2. Planifie la structure globale et la progression interne de la ressource.');
+    if (rtype === 'bac_ecrit' || rtype === 'bac_pratique')
+      L.push('3. Calibre la difficulté et le barème en référence aux annales officielles et sujets zéro Eduscol.');
+    if (rtype === 'correction')
+      L.push('3. Identifie les erreurs classiques des élèves pour enrichir les justifications pédagogiques.');
+    if (parseInt(bv) >= 5)
+      L.push(`4. Assure-toi que chaque tâche exige effectivement un niveau taxonomique ${bv} (${BLOOM[bv]}) — évalue la complexité cognitive réelle de chaque question.`);
+    L.push('Commence directement par la ressource, sans méta-commentaire sur ta planification.');
+    L.push('</thinking_process>');
+    L.push('');
+  }
+
+  /* OUTPUT_FORMAT — différencié par sous-type × Bloom */
+  const ofTpl = getOutputFormat(rtype, rsub, bv);
+  L.push('<output_format>');
+  L.push(ofTpl);
+  L.push('</output_format>');
+
+  renderPrompt(L.join('\n'), score);
+}
+
+/* ══════════════════════════════════════════
+   GÉNÉRATION PROMPT ÉLÈVE v5
+   ══════════════════════════════════════════ */
+function generateStudentPrompt() {
+  const lvl    = g('s-level');
+  const theme  = g('s-theme');
+  const type   = g('s-type');
+  const notions = gSel('s-notion');
+  const mastery = gCk('s-mastery')[0] || 'intermediaire';
+  const dur     = gCk('s-duration')[0] || '20min';
+  const diffs   = gCk('s-diff');
+  const blocked = g('s-blocked');
+  const extra   = g('s-extra');
+  const style   = _selectedStyle || 'exemple';
+
+  if (!lvl || !theme || !type) {
+    showToast('Choisis ton niveau, le chapitre et le type de travail.', true); return;
+  }
+
+  const lvlL   = { premiere: 'Première NSI', terminale: 'Terminale NSI' }[lvl] || lvl;
+  const themeL = document.querySelector(`#s-theme option[value="${theme}"]`)?.text || theme;
+  const typeMap = {
+    exercices_guides: 'exercices guidés pas à pas avec explications détaillées et rappels de cours si besoin',
+    qcm: 'QCM avec justification complète de chaque réponse (correcte et incorrecte)',
+    tp_python: 'mini-TP Python avec code à compléter, assertions de test intégrées et correction commentée',
+    defi: 'défi algorithmique en autonomie avec spécifications précises et jeux de tests',
+    flashcards: 'fiches de révision des notions clés mémorisables (définition / exemple / contre-exemple)',
+    annale: 'exercice type annale du baccalauréat NSI avec corrigé complet',
+    explication: 'explication détaillée d\'une notion, avec définitions, analogies et exemples progressifs',
+    correction: 'analyse et correction de code Python avec explications des erreurs et des améliorations possibles'
+  };
+  const typeL = typeMap[type] || type;
+
+  const masteryL = {
+    debutant:       'débutant sur ce chapitre — forte demande de guidage, inclure les rappels de définitions de base avant chaque exercice',
+    intermediaire:  'niveau intermédiaire — bases acquises, besoin d\'approfondissement et de mise en pratique sur des cas variés',
+    avance:         'niveau avancé — notions bien maîtrisées, cherche un défi de niveau baccalauréat ou supérieur'
+  }[mastery] || mastery;
+
+  const durL = { '10min': '10 minutes', '20min': '20 minutes', '30min': '30 à 45 minutes', '1h': '1 heure' }[dur] || dur;
+
+  const styleL = {
+    analogie: 'par analogie avec des situations de la vie réelle et des comparaisons concrètes et mémorables',
+    exemple:  'par l\'exemple, avec de nombreux cas pratiques variés et commentés',
+    preuve:   'par le raisonnement formel et la démonstration rigoureuse, avec preuves de correction',
+    visual:   'visuellement, avec des schémas ASCII, des traces d\'exécution pas à pas et des tableaux d\'état'
+  }[style] || 'par des exemples concrets et des explications progressives';
+
+  const needsCot = ['defi', 'annale', 'tp_python', 'correction'].includes(type);
+
+  const L = [];
+
+  L.push('<role>');
+  L.push(`Tu es un professeur de NSI expérimenté, bienveillant et pédagogue. Tu adaptes tes explications et tes exercices avec une grande précision au niveau réel de l'élève, en utilisant des exemples concrets et motivants. Tu maîtrises parfaitement le programme officiel NSI du lycée général (BO 2019) et tu ne jamais introduis de notions hors programme sans le signaler.`);
+  L.push('</role>');
+  L.push('');
+
+  L.push('<context>');
+  L.push(`L'élève est en ${lvlL}. Son niveau sur ce chapitre : ${masteryL}. Temps disponible pour ce travail : ${durL}.`);
+  if (diffs.length > 0)
+    L.push(`Difficultés spécifiquement signalées par l'élève : ${diffs.join(', ')}. Cible ces points en priorité dans les exercices et les explications.`);
+  if (blocked)
+    L.push(`L'élève précise qu'il a bloqué sur : ${blocked}. Commence par éclaircir ce point précis avant de passer à la suite.`);
+  L.push('</context>');
+  L.push('');
+
+  L.push('<programme_nsi>');
+  L.push(`Chapitre travaillé : ${themeL} (programme officiel BO NSI).`);
+  if (notions.length > 0) { L.push('Notions précises souhaitées :'); notions.forEach(n => L.push(`  - ${n}`)); }
+  L.push('</programme_nsi>');
+  L.push('');
+
+  L.push('<style_pedagogique>');
+  L.push(`L'élève préfère apprendre ${styleL}. Adapte systématiquement tes explications et tes exemples à cette préférence.`);
+  L.push('</style_pedagogique>');
+  L.push('');
+
+  if (needsCot) {
+    L.push('<thinking_process>');
+    L.push('Avant de produire les exercices, raisonne en silence :');
+    L.push('1. Identifie les concepts clés du chapitre à mobiliser pour ce type de travail.');
+    L.push('2. Détermine la progression de difficulté adaptée au niveau déclaré.');
+    if (diffs.length > 0) L.push('3. Intègre les difficultés signalées comme axes prioritaires.');
+    L.push(`${diffs.length > 0 ? '4' : '3'}. Vérifie que chaque exercice respecte strictement le programme NSI — aucune notion hors programme.`);
+    L.push('Commence directement par le travail demandé, sans méta-commentaire.');
+    L.push('</thinking_process>');
+    L.push('');
+  }
+
+  L.push('<instructions>');
+  L.push(`Génère des ${typeL} sur le chapitre indiqué. Adapte la difficulté au niveau déclaré avec précision.`);
+  if (extra) L.push(`Précisions supplémentaires de l'élève : ${extra}`);
+  L.push('</instructions>');
+  L.push('');
+
+  L.push('<constraints>');
+  L.push('- Respecter strictement le programme NSI officiel (BO 2019).');
+  L.push('- Utiliser uniquement Python 3 pour les exercices de programmation.');
+  if (mastery === 'debutant')   L.push('- Inclure de courts rappels de cours et de définitions avant chaque exercice.');
+  if (mastery === 'avance')     L.push('- Inclure au moins un exercice de niveau baccalauréat ou supérieur.');
+  L.push('- Fournir des corrections complètes avec justifications pédagogiques pour chaque exercice.');
+  L.push('- Calibrer la quantité de travail à la durée disponible déclarée.');
+  if (diffs.length > 0) L.push(`- Inclure au moins un exercice ciblant chacune des difficultés signalées : ${diffs.join(', ')}.`);
+  L.push('</constraints>');
+  L.push('');
+
+  L.push('<output_format>');
+  L.push('Commence directement par le travail demandé, sans introduction sur ta méthode. Structure claire avec titres et numéros. Progression de difficulté visible. Corrections complètes à la fin avec explications.');
+  if (durL.includes('heure') || dur === '1h') L.push('Si le temps disponible le permet, ajoute une section « Pour aller plus loin ».');
+  L.push('</output_format>');
+
+  renderPrompt(L.join('\n'), 88);
+}
+
+/* ══ RENDU COMMUN ══ */
+let _lastPrompt = '';
+function renderPrompt(prompt, score) {
+  _lastPrompt = prompt;
+  const empty = safeGet('pv-empty'), pre = safeGet('pp'), code = safeGet('pc');
+  if (empty) empty.style.display = 'none';
+  if (pre)   pre.classList.remove('hidden');
+  if (code)  { code.textContent = prompt; hljs.highlightElement(code); }
+  const tok = safeGet('tok');
+  if (tok) tok.textContent = `~ ${estimateTokens(prompt).toLocaleString('fr-FR')} tokens`;
+  const bCopy = safeGet('btn-copy'), bCai = safeGet('btn-claude-ai'), bCais = safeGet('btn-claude-ai-s'), bApiRun = safeGet('btn-api-run');
+  if (bCopy) bCopy.disabled = false;
+  if (bCai)  bCai.disabled = false;
+  if (bCais) bCais.disabled = false;
+  if (bApiRun) { const key = safeGet('api-key')?.value?.trim(); bApiRun.disabled = !key; }
+  safeGet('api-status').textContent = 'Prompt prêt — entrez votre clé API';
+  safeGet('api-response').textContent = 'Prompt généré. Entrez votre clé API Anthropic ci-dessus et cliquez sur « Tester ».';
+  safeGet('api-response').className = 'api-response';
+  showToast('Prompt généré avec succès.');
+}
+
+/* ══ OUVRIR DANS CLAUDE.AI ══ */
+function openInClaude() {
+  if (!_lastPrompt) { showToast('Générez d\'abord un prompt.', true); return; }
+  navigator.clipboard.writeText(_lastPrompt)
+    .then(() => { window.open('https://claude.ai/new', '_blank', 'noopener,noreferrer'); showToast('Prompt copié — collez-le dans Claude.ai (Ctrl+V / Cmd+V).', 'info'); })
+    .catch(() => { window.open('https://claude.ai/new', '_blank', 'noopener,noreferrer'); showToast('Claude.ai ouvert — copiez et collez votre prompt.', 'info'); });
+}
+
+/* ══ COPIE ══ */
+function copyPrompt() {
+  const t = safeGet('pc')?.textContent;
+  if (!t) return;
+  navigator.clipboard.writeText(t).then(() => showToast('Prompt copié dans le presse-papier.'));
+}
+
+/* ══ RESET ══ */
+function resetForm() {
+  if (!confirm('Réinitialiser tous les champs ?')) return;
+  document.querySelectorAll('.forge-input,.forge-select,.forge-textarea').forEach(el =>
+    el.tagName === 'SELECT' ? (el.selectedIndex = -1) : (el.value = ''));
+  document.querySelectorAll('input[type="checkbox"],input[type="radio"]').forEach(el => el.checked = false);
+  const bl = safeGet('bloom-level'); if (bl) { bl.value = 3; updateBloom(); }
+  files.length = 0; renderFiles(); updateNotions(); checkPdfWarn();
+  document.querySelectorAll('#edu-chips .on').forEach(c => c.classList.remove('on'));
+  document.querySelectorAll('.style-card.sel').forEach(c => c.classList.remove('sel'));
+  _selectedStyle = '';
+  const pvemp = safeGet('pv-empty'), pp = safeGet('pp'), pc = safeGet('pc');
+  if (pvemp) pvemp.style.display = '';
+  if (pp) pp.classList.add('hidden');
+  if (pc) pc.textContent = '';
+  const tok = safeGet('tok'); if (tok) tok.textContent = '~ 0 tokens';
+  ['btn-copy','btn-claude-ai','btn-claude-ai-s','btn-api-run'].forEach(id => { const b = safeGet(id); if (b) b.disabled = true; });
+  const fill = safeGet('q-fill'), pct = safeGet('q-pct'), desc = safeGet('q-desc'), warns = safeGet('q-warns');
+  if (fill) fill.style.width = '0%';
+  if (pct)  pct.textContent = '0 / 100';
+  if (desc) desc.textContent = 'Remplissez les champs obligatoires pour obtenir une évaluation.';
+  if (warns) warns.innerHTML = '';
+  const rsw = safeGet('res-sub-wrap'), bi = safeGet('bac-info'), rcw = safeGet('role-cw');
+  if (rsw) rsw.style.display = 'none';
+  if (bi)  bi.style.display = 'none';
+  if (rcw) rcw.style.display = 'none';
+  const apiResp = safeGet('api-response'), apiStatus = safeGet('api-status');
+  if (apiResp) { apiResp.textContent = 'Entrez votre clé API et générez un prompt pour tester directement.'; apiResp.className = 'api-response'; }
+  if (apiStatus) apiStatus.textContent = 'En attente d\'un prompt';
+  _lastPrompt = '';
+  showToast('Formulaire réinitialisé.');
+}
+
+/* ══ THÈMES ══ */
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  ['dark','light','projector'].forEach(x => { const b = safeGet('th-' + x); if (b) b.classList.toggle('active', x === t); });
+  const isDark = (t === 'dark');
+  const hd = safeGet('hljs-dark'), hl = safeGet('hljs-light');
+  if (hd) hd.disabled = !isDark;
+  if (hl) hl.disabled = isDark;
+  const code = safeGet('pc');
+  if (code && code.textContent) hljs.highlightElement(code);
+  localStorage.setItem('npf-theme', t);
+}
+
+/* ══ MODE ÉLÈVE / ENSEIGNANT ══ */
+function setMode(m) {
+  const isProf = (m === 'prof');
+  const pp = safeGet('prof-panel'), sp = safeGet('student-panel');
+  if (pp) pp.style.display = isProf ? 'block' : 'none';
+  if (sp) sp.style.display = isProf ? 'none' : 'block';
+  safeGet('mb-prof')?.classList.toggle('active', isProf);
+  safeGet('mb-student')?.classList.toggle('active', !isProf);
+  // reset preview
+  const pvemp = safeGet('pv-empty'), ppre = safeGet('pp'), pc = safeGet('pc');
+  if (pvemp) pvemp.style.display = '';
+  if (ppre) ppre.classList.add('hidden');
+  if (pc) pc.textContent = '';
+  if (safeGet('tok')) safeGet('tok').textContent = '~ 0 tokens';
+  ['btn-copy','btn-claude-ai','btn-claude-ai-s','btn-api-run'].forEach(id => { const b = safeGet(id); if (b) b.disabled = true; });
+  const fill = safeGet('q-fill'), pct = safeGet('q-pct'), desc = safeGet('q-desc');
+  if (fill) fill.style.width = '0%';
+  if (pct)  pct.textContent = '0 / 100';
+  if (desc) desc.textContent = 'Remplissez les champs pour obtenir une évaluation.';
+  _lastPrompt = '';
+}
+
+/* ══════════════════════════════════════════
+   API CLAUDE IN-SITU (streaming)
+   ══════════════════════════════════════════ */
+safeGet('api-key')?.addEventListener('input', function() {
+  const bRun = safeGet('btn-api-run');
+  if (bRun) bRun.disabled = !this.value.trim() || !_lastPrompt;
+  if (this.value.trim()) sessionStorage.setItem('npf-api-key', this.value.trim());
+});
+
+async function runClaudeAPI() {
+  if (!_lastPrompt) { showToast('Générez d\'abord un prompt.', true); return; }
+  const apiKey = safeGet('api-key')?.value?.trim();
+  if (!apiKey) { showToast('Entrez votre clé API Anthropic.', true); return; }
+
+  const respEl = safeGet('api-response');
+  const statusEl = safeGet('api-status');
+  const btn = safeGet('btn-api-run');
+
+  respEl.className = 'api-response loading';
+  respEl.innerHTML = 'Connexion à Claude en cours...<span class="api-cursor"></span>';
+  if (statusEl) statusEl.textContent = 'En cours...';
+  if (btn) btn.disabled = true;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4096,
+        stream: true,
+        messages: [{ role: 'user', content: _lastPrompt }]
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error?.message || `Erreur HTTP ${response.status}`);
+    }
+
+    respEl.className = 'api-response';
+    respEl.innerHTML = '<span class="api-cursor"></span>';
+    let fullText = '';
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if (data === '[DONE]') break;
+        try {
+          const obj = JSON.parse(data);
+          if (obj.type === 'content_block_delta' && obj.delta?.type === 'text_delta') {
+            fullText += obj.delta.text;
+            respEl.textContent = fullText;
+            respEl.scrollTop = respEl.scrollHeight;
+          }
+        } catch {}
+      }
+    }
+
+    if (statusEl) statusEl.textContent = `Réponse reçue (${estimateTokens(fullText).toLocaleString('fr-FR')} tokens env.)`;
+    showToast('Réponse Claude reçue.', 'info');
+
+  } catch (err) {
+    respEl.className = 'api-response';
+    respEl.textContent = `Erreur : ${err.message}\n\nVérifiez votre clé API et votre connexion.`;
+    if (statusEl) statusEl.textContent = 'Erreur';
+    showToast('Erreur API : ' + err.message, true);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+/* ══════════════════════════════════════════
+   PARTAGE PAR URL (base64)
+   ══════════════════════════════════════════ */
+function shareURL() {
+  const state = getFormState();
+  try {
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+    const url = window.location.href.split('?')[0] + '?p=' + encoded;
+    navigator.clipboard.writeText(url)
+      .then(() => showToast('Lien de partage copié dans le presse-papier.', 'info'))
+      .catch(() => prompt('Copiez ce lien de partage :', url));
+  } catch (e) {
+    showToast('Impossible de générer le lien (profil trop volumineux).', true);
+  }
+}
+
+function loadFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const p = params.get('p');
+  if (!p) return;
+  try {
+    const state = JSON.parse(decodeURIComponent(escape(atob(p))));
+    applyFormState(state);
+    showToast('Profil chargé depuis le lien partagé.', 'info');
+  } catch (e) {
+    showToast('Lien de partage invalide ou corrompu.', true);
+  }
+}
+
+/* ══════════════════════════════════════════
+   BIBLIOTHÈQUE DE PROFILS (localStorage illimité)
+   ══════════════════════════════════════════ */
+function getLibrary() {
+  try { return JSON.parse(localStorage.getItem('npf-library') || '[]'); } catch { return []; }
+}
+function saveLibrary(lib) { localStorage.setItem('npf-library', JSON.stringify(lib)); }
+
+function showSaveModal() {
+  const nameInp = safeGet('modal-name-input');
+  if (nameInp) nameInp.value = '';
+  safeGet('save-modal')?.classList.add('open');
+  setTimeout(() => nameInp?.focus(), 80);
+}
+function confirmSave() {
+  const name = (safeGet('modal-name-input')?.value || '').trim() || 'Profil sans nom';
+  const lib = getLibrary();
+  lib.unshift({ id: Date.now(), name, state: getFormState(), date: new Date().toLocaleDateString('fr-FR') });
+  saveLibrary(lib);
+  renderSaveSlots();
+  closeModal('save-modal');
+  showToast(`Profil "${name}" sauvegardé.`, 'info');
+}
+
+function showLibModal() {
+  renderLibList();
+  safeGet('lib-modal')?.classList.add('open');
+}
+function renderLibList() {
+  const lib = getLibrary();
+  const el = safeGet('lib-list');
+  if (!el) return;
+  if (!lib.length) { el.innerHTML = '<div class="lib-empty">Aucun profil sauvegardé.</div>'; return; }
+  el.innerHTML = lib.map((item, i) => `
+    <div class="lib-item" onclick="loadLibItem(${i})">
+      <div class="lib-item-name">${item.name}</div>
+      <div class="lib-item-date">${item.date}</div>
+      <button class="lib-item-del" onclick="deleteLibItem(event,${i})" title="Supprimer">&#10005;</button>
+    </div>
+  `).join('');
+}
+function loadLibItem(i) {
+  const lib = getLibrary();
+  if (!lib[i]) return;
+  applyFormState(lib[i].state);
+  closeModal('lib-modal');
+  showToast(`Profil "${lib[i].name}" chargé.`, 'info');
+}
+function deleteLibItem(e, i) {
+  e.stopPropagation();
+  const lib = getLibrary();
+  const name = lib[i]?.name || '';
+  if (!confirm(`Supprimer le profil "${name}" ?`)) return;
+  lib.splice(i, 1);
+  saveLibrary(lib);
+  renderLibList();
+  renderSaveSlots();
+}
+function renderSaveSlots() {
+  const lib = getLibrary().slice(0, 5);
+  const cont = safeGet('save-slots-container');
+  if (!cont) return;
+  cont.innerHTML = lib.map((item, i) => `
+    <button class="slot-btn has-data" onclick="loadLibItemById(${item.id})" title="${item.date}">${item.name}</button>
+  `).join('') || '<span style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:var(--t3)">Aucun profil</span>';
+}
+function loadLibItemById(id) {
+  const item = getLibrary().find(x => x.id === id);
+  if (!item) return;
+  applyFormState(item.state);
+  showToast(`Profil "${item.name}" chargé.`, 'info');
+}
+
+function closeModal(id) { safeGet(id)?.classList.remove('open'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal('save-modal'); closeModal('lib-modal'); } });
+
+/* ══ EXPORT / IMPORT JSON ══ */
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(getFormState(), null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `nsi-prompt-forge-${new Date().toISOString().slice(0, 10)}.json`; a.click();
+  showToast('Paramètres exportés en JSON.');
+}
+function importJSON(input) {
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (typeof data !== 'object' || Array.isArray(data)) throw new Error('format invalide');
+      applyFormState(data); showToast('Profil importé avec succès.', 'info');
+    } catch { showToast('Fichier JSON invalide ou incompatible.', true); }
+    input.value = '';
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+/* ══ PERSISTANCE ÉTAT ══ */
+function getFormState() {
+  return {
+    _v: 'v5',
+    role: g('role-profile'), roleCustom: g('role-custom'),
+    level: g('level'), classSize: g('class-size'), classProfile: g('class-profile'), classContext: g('class-context'),
+    themes: gSel('theme-main'), notions: gSel('notion-select'), spiral: g('spiral'), notionPrec: g('notion-prec'),
+    resourceType: g('resource-type'), resSubtype: g('res-subtype'), duration: g('duration'), workMode: g('work-mode'),
+    objective: g('main-objective'), bloomLevel: safeGet('bloom-level')?.value || 3,
+    comps: gCk('comp'), prereqs: g('prerequisites'), agathe: gCk('agathe'),
+    langs: gCk('lang'), outputFormat: g('output-format'), tone: g('tone'),
+    tCorr: gb('t-corr'), tBar: gb('t-bar'), tDiff: gb('t-diff'), tEbep: gb('t-ebep'), tNum: gb('t-num'),
+    fmtConstr: g('fmt-constr'), chips: getChips(),
+    docRefs: g('doc-refs'), exPos: g('ex-pos'), exNeg: g('ex-neg'), negConstr: g('neg-constr'), extra: g('extra')
+  };
+}
+
+function applyFormState(s) {
+  if (!s) return;
+  const sv = (id, val) => { const el = safeGet(id); if (el && val != null) el.value = val; };
+  const sc = (id, v) => { const el = safeGet(id); if (el) el.checked = !!v; };
+  sv('role-profile', s.role); sv('role-custom', s.roleCustom);
+  if (s.role === 'custom') { const rc = safeGet('role-cw'); if (rc) rc.style.display = 'block'; }
+  sv('level', s.level); sv('class-size', s.classSize); sv('class-profile', s.classProfile); sv('class-context', s.classContext);
+  if (s.themes && s.themes.length) {
+    const sel = safeGet('theme-main');
+    if (sel) { Array.from(sel.options).forEach(o => o.selected = s.themes.includes(o.value)); updateNotions(); }
+    setTimeout(() => {
+      if (s.notions && s.notions.length) {
+        const ns = safeGet('notion-select');
+        if (ns) Array.from(ns.options).forEach(o => o.selected = s.notions.includes(o.value));
+      }
+    }, 150);
+  }
+  sv('spiral', s.spiral); sv('notion-prec', s.notionPrec);
+  sv('resource-type', s.resourceType); if (s.resourceType) updateResourceSub();
+  setTimeout(() => sv('res-subtype', s.resSubtype), 80);
+  sv('duration', s.duration); sv('work-mode', s.workMode);
+  sv('main-objective', s.objective);
+  if (s.bloomLevel) { const bl = safeGet('bloom-level'); if (bl) { bl.value = s.bloomLevel; updateBloom(); } }
+  (s.comps || []).forEach(v => { const el = document.querySelector(`input[name="comp"][value="${v}"]`); if (el) el.checked = true; });
+  sv('prerequisites', s.prereqs);
+  (s.agathe || []).forEach(v => { const el = document.querySelector(`input[name="agathe"][value="${v}"]`); if (el) el.checked = true; });
+  (s.langs || []).forEach(v => { const el = document.querySelector(`input[name="lang"][value="${v}"]`); if (el) el.checked = true; });
+  sv('output-format', s.outputFormat); sv('tone', s.tone);
+  sc('t-corr', s.tCorr); sc('t-bar', s.tBar); sc('t-diff', s.tDiff); sc('t-ebep', s.tEbep); sc('t-num', s.tNum);
+  sv('fmt-constr', s.fmtConstr);
+  if (s.chips && s.chips.length) document.querySelectorAll('#edu-chips .echip').forEach(c => { if (s.chips.includes(c.dataset.val)) c.classList.add('on'); });
+  sv('doc-refs', s.docRefs); sv('ex-pos', s.exPos); sv('ex-neg', s.exNeg); sv('neg-constr', s.negConstr); sv('extra', s.extra);
+}
+
+/* ══ TOAST ══ */
+let _tt;
+function showToast(msg, type = false) {
+  const t = safeGet('toast'); if (!t) return;
+  t.textContent = msg;
+  t.className = 'toast-msg show' + (type === true ? ' err' : type ? ' ' + type : '');
+  clearTimeout(_tt); _tt = setTimeout(() => t.classList.remove('show'), 3400);
+}
+
+/* ══ RÔLE CUSTOM ══ */
+safeGet('role-profile')?.addEventListener('change', function () {
+  const rc = safeGet('role-cw');
+  if (rc) rc.style.display = this.value === 'custom' ? 'block' : 'none';
+});
+
+/* ══ INIT ══ */
+(function () {
+  setTheme(localStorage.getItem('npf-theme') || 'dark');
+  renderSaveSlots();
+  updateBloom();
+  setMode('prof');
+  // Restaurer clé API depuis session
+  const k = sessionStorage.getItem('npf-api-key');
+  if (k) { const inp = safeGet('api-key'); if (inp) inp.value = k; }
+  // Charger depuis URL si présent
+  loadFromURL();
+  // Validation live au changement de champs importants
+  ['level','resource-type','duration','bloom-level'].forEach(id => {
+    safeGet(id)?.addEventListener('change', computeScore);
+  });
+  safeGet('main-objective')?.addEventListener('input', computeScore);
+  safeGet('ex-pos')?.addEventListener('input', computeScore);
+  safeGet('prerequisites')?.addEventListener('input', computeScore);
+})();
+</script>
+</body>
+</html>
